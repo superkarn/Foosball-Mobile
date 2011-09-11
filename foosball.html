@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    
+    <title>Foosball</title>
+    
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css" />
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
+    
+    <style>
+        .hidden {
+            display:none;
+        }
+    </style>
+</head>
+<body>
+
+
+<div id="pageList" data-role="page"> 
+    <div data-role="header" data-position="inline">
+        <a href="#" data-icon="refresh" data-theme="b" onclick="system.refreshGameList(); return false;">Refresh</a>
+        <h1>Game List</h1>
+        <a href="index.html" data-icon="check" data-theme="b">Save</a>
+    </div>
+    
+    <ul id="gameList" data-role="listview" data-theme="c"></ul>
+    
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#pageList" data-role="button" data-icon="grid">List</a>
+        <a href="#pageAdd" data-role="button" data-icon="plus">Add</a>
+    </div>
+</div>
+
+
+<div id="pageAdd" data-role="page"> 
+    
+    
+    game Add page
+    
+    
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#pageList" data-role="button" data-icon="grid">List</a>
+        <a href="#pageAdd" data-role="button" data-icon="plus">Add</a>
+    </div>
+</div>
+
+
+<div id="pageDetails1" data-role="page"> 
+    
+    
+    game details    
+    
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#gameList" data-role="button" data-icon="grid">List</a>
+        <a href="#gameAdd" data-role="button" data-icon="plus">Add</a>
+    </div>
+</div>
+
+
+<div id="partialDetailsFooter" class="hidden">    
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#gameList" data-role="button" data-icon="grid">List</a>
+        <a href="#gameAdd" data-role="button" data-icon="plus">XXX</a>
+    </div>
+</div>
+
+</body>
+<script>
+var Foosball = Foosball || {};
+
+Foosball.System = function () {
+    this.__namespace = "Foosball";
+    this.__name = "System";
+    this.Games = new Array();
+}
+Foosball.System.prototype.resumeState = function () {
+    // static - restore data from localStorage
+    var data = JSON.parse(localStorage.getItem(this.__namespace + "-" + this.__name));
+    this.Games = data != null ? data.Games : new Array();
+    
+    this.refreshGameList(); 
+}
+Foosball.System.prototype.saveState = function () {
+    // static - save data to localStorage
+    localStorage.setItem(this.__namespace + "-" + this.__name, JSON.stringify(this));
+}
+Foosball.System.prototype.refreshGameList = function () {
+    $("#gameList").html('');
+    for(var ii in this.Games) {
+        $("#gameList").append("<li><a href='#pageDetails"+ this.Games[ii].Id +"' onclick='system.loadGame("+ this.Games[ii].Id +"); return false;'>"+ this.Games[ii].Team1 +" vs "+ this.Games[ii].Team2  +"</a></li>");
+    }
+    $("#gameList").listview('refresh');
+}
+Foosball.System.prototype.loadGame = function (id) {
+    var content = "game #"+ id + $("#partialDetailsFooter").html();    
+    
+    
+    // http://stackoverflow.com/questions/6050384/dynamically-create-jquery-mobile-page-via-javascript-after-clicking
+    $("body").append('<div data-role="page" id="pageDetails' + id + '"><div data-role="content">' + content + '</div></div>');
+    $.mobile.initializePage();
+    $.mobile.changePage("#pageDetails" + id, "fade", false, true);
+}
+Foosball.System.prototype.addGame = function () {
+    // add a game to the history
+    var newId = this.Games.length;
+    var newGame = new Foosball.Game();
+    newGame.Id = newId;
+    newGame.Team1 = new Foosball.Team();
+    newGame.Team2 = new Foosball.Team();
+    newGame.StartDate = new Date();
+    
+    this.Games[newId] = newGame;
+    
+    this.loadGame(newId);
+}
+
+Foosball.Player = function () {
+    this.Id = 0;
+    this.Name = "";
+}
+Foosball.Game = function () {
+    this.Id = 0;
+    this.Team1 = null;
+    this.Team2 = null;
+    this.Points = new Array();
+    this.StartDate = null;
+    this.EndDate = null;
+}
+Foosball.Team = function () {
+    this.Id = 0;
+    this.Player1 = null;
+    this.Player2 = null;
+}
+Foosball.Point = function () {
+    this.Id = 0;
+    this.Team = null;
+    this.Player = null;
+    this.Timestamp = null;
+}
+
+
+
+
+
+
+
+
+
+// jquery mobile settings 
+$(document).bind("mobileinit", function(){
+    $.mobile.defaultPageTransition = "fade";
+});
+
+
+// start up code
+var foosball;
+$(document).ready(function() {
+    system = new Foosball.System();
+    system.resumeState();
+    //system.addGame();
+    
+    system.saveState();
+});
+</script>
+</html>
