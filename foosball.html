@@ -21,9 +21,7 @@
 
 <div id="pageListGames" data-role="page"> 
     <div data-role="header" data-position="inline">
-        <a href="#" data-icon="refresh" data-theme="b" onclick="system.refreshGameList(); return false;">Refresh</a>
         <h1>Game List</h1>
-        <a href="index.html" data-icon="check" data-theme="b">Save</a>
     </div>
     
     <div data-role="content">
@@ -40,13 +38,11 @@
 
 <div id="pageListPlayers" data-role="page"> 
     <div data-role="header" data-position="inline">
-        <a href="#" data-icon="refresh" data-theme="b" onclick="system.refreshPlayerList(); return false;">Refresh</a>
         <h1>Player List</h1>
-        <a href="index.html" data-icon="check" data-theme="b">Save</a>
     </div>
     
     <div data-role="content">
-        <ul id="playerList" data-role="listview" data-theme="c"></ul>
+        <ul id="playerList" data-role="listview" data-filter="true" data-theme="c"></ul>
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
@@ -73,15 +69,9 @@
     </div>
 </div>
 
-
-<div id="partialUpdatePlayerContent" class="hidden">
-    <div data-role="content">
-        <div data-role="fieldcontain">
-            <label for="playerName{{playerId}}">Player Name:</label>
-            <input type="text" name="playerName{{playerId}}" id="playerName{{playerId}}" value="{{playerName}}"  />
-            <input type="hidden" name="playerId{{playerId}}" id="playerId{{playerId}}" value="{{playerId}}"  />
-        </div>	
-        <input type="button" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#playerId{{playerId}}').val(), $('#playerName{{playerId}}').val());" />
+<div id="partialHeader" class="hidden">
+    <div data-role="header" data-position="inline">
+        <h1>{{Title}}</h1>
     </div>
 </div>
 <div id="partialFooter" class="hidden">
@@ -93,6 +83,27 @@
     </div>
 </div>
 
+<div id="partialPlayerContent" class="hidden">
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label for="playerName{{Id}}">Player Name:</label>
+            <input type="text" name="playerName{{Id}}" id="playerName{{Id}}" value="{{Name}}"  />
+            <input type="hidden" name="playerId{{Id}}" id="playerId{{Id}}" value="{{Id}}"  />
+        </div>	
+        <input type="button" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#playerId{{Id}}').val(), $('#playerName{{Id}}').val());" />
+    </div>
+</div>
+<div id="partialGameContent" class="hidden">
+    <div data-role="content">
+        <div data-role="fieldcontain">
+            <label for="playerName{{Id}}">Player Name:</label>
+            <input type="text" name="playerName{{Id}}" id="playerName{{Id}}" value="{{Name}}"  />
+            <input type="hidden" name="playerId{{Id}}" id="playerId{{Id}}" value="{{Id}}"  />
+        </div>	
+        <input type="button" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#playerId{{Id}}').val(), $('#playerName{{Id}}').val());" />
+    </div>
+</div>
+
 </body>
 <script>
 var Foosball = Foosball || {};
@@ -100,6 +111,7 @@ var Foosball = Foosball || {};
 Foosball.DOMHelper = function () { }
 Foosball.DOMHelper.addPlayer = function (name) {
     system.addPlayer(name); 
+    $("#playerId").val("");
     $("#playerName").val("");
     $.mobile.changePage("#pageListPlayers");
 }
@@ -149,26 +161,30 @@ Foosball.System.prototype.refreshGameList = function () {
     } catch (error) { }
 }
 Foosball.System.prototype.loadPagePlayer = function (id) {
-    var content = $("#partialUpdatePlayerContent").html();
-    content = content.replace(/{{playerId}}/g, this.Players[id].Id);
-    content = content.replace(/{{playerName}}/g, this.Players[id].Name);
+    var header = $("#partialHeader").html();
+    header = header.replace(/{{Title}}/g, "Player #" + this.Players[id].Id);
     var footer = $("#partialFooter").html();
     
+    var content = $("#partialPlayerContent").html();
+    content = content.replace(/{{Id}}/g, this.Players[id].Id);
+    content = content.replace(/{{Name}}/g, this.Players[id].Name);
     
-    // http://stackoverflow.com/questions/6050384/dynamically-create-jquery-mobile-page-via-javascript-after-clicking
-    $("body").append("<div data-role='page' id='pagePlayerDetails" + id + "'>" + content + footer + "</div>");
+    
+    $("body").append("<div data-role='page' id='pagePlayerDetails" + id + "'>" + header + content + footer + "</div>");
     $.mobile.initializePage();
     $.mobile.changePage("#pagePlayerDetails" + id, "fade", false, true);
 }
 Foosball.System.prototype.loadPageGame = function (id) {
-    var content = "game #"+ id;    
-    content = "<div data-role='content'>"+ content +"</div>";
+    var header = $("#partialHeader").html();
+    header = header.replace(/{{Title}}/g, "Game #" + this.Games[id].Id);
+    var footer = $("#partialFooter").html();
     
-    var footer = $("#partialFooter").html();  
+    var content = $("#partialGameContent").html();
+    content = content.replace(/{{Id}}/g, this.Games[id].Id);
+    content = content.replace(/{{Name}}/g, this.Games[id].Name);
     
     
-    // http://stackoverflow.com/questions/6050384/dynamically-create-jquery-mobile-page-via-javascript-after-clicking
-    $("body").append("<div data-role='page' id='pageGameDetails" + id + "'>" + content + footer + "</div>");
+    $("body").append("<div data-role='page' id='pageGameDetails" + id + "'>" + header + content + footer + "</div>");
     $.mobile.initializePage();
     $.mobile.changePage("#pageGameDetails" + id, "fade", false, true);
 }
@@ -200,8 +216,6 @@ Foosball.System.prototype.addGame = function () {
     return newId;
 }
 Foosball.System.prototype.updatePlayer = function (id, name) {
-    console.log("id: "+ id);
-    console.log(this.Players[id]);
     this.Players[id].Name = name;
     this.saveState();
     this.refreshPlayerList();
@@ -213,6 +227,7 @@ Foosball.Player = function () {
 }
 Foosball.Game = function () {
     this.Id = 0;
+    this.Name = "";
     this.Team1 = null;
     this.Team2 = null;
     this.Points = new Array();
@@ -250,7 +265,6 @@ var foosball;
 $(document).ready(function() {
     system = new Foosball.System();
     system.resumeState();
-    //system.addGame();
     
 });
 </script>
