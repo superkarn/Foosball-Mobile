@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    
+    <meta charset="utf-8">
+    <!--
+    <meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    -->
+
     <title>Foosball</title>
     
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css" />
@@ -49,58 +53,71 @@
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
         <a href="#pageListGames" data-role="button" data-icon="grid">Games</a>
         <a href="#pageListPlayers" data-role="button" data-icon="grid" class="ui-btn-active ui-state-persist">Players</a>
-        <a href="#pageAddGame" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
 
 
 
-<div id="partialDivs" class="hidden">
+<div id="pagePlayerSettings" data-role="page">
+    <div data-role="header" data-position="inline">
+        <h1 id="pagePlayerSettings_Title"></h1>
+    </div>
+    <div data-role="content">
+        <input type="hidden" name="pagePlayerSettings_Id" id="pagePlayerSettings_Id" />
+        <div data-role="fieldcontain">
+            <label for="pagePlayerSettings_Name">Player Name:</label>
+            <input type="text" name="pagePlayerSettings_Name" id="pagePlayerSettings_Name" />
+        </div>	
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pageListPlayers');" /></div>
+            <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#pagePlayerSettings_Id').val());" /></div>	   
+        </fieldset>
+    </div>
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#pageListGames" data-role="button" data-icon="grid">Games</a>
+        <a href="#pageListPlayers" data-role="button" data-icon="grid">Players</a>
+    </div>
+</div>
 
-    <div id="partialHeader">
-        <div data-role="header" data-position="inline">
-            <h1>{{Title}}</h1>
-        </div>
+<div id="pageGameSettings" data-role="page">
+    <div data-role="header" data-position="inline">
+        <h1 id="pageGameSettings_Title"></h1>
     </div>
-    
-    <div id="partialFooter">
-        <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-            <a href="#pageListGames" data-role="button" data-icon="grid">Games</a>
-            <a href="#pageListPlayers" data-role="button" data-icon="grid">Players</a>
-            <!--
-            <a href="#pageAddGame" data-role="button" data-icon="plus">Game</a>
-            <a href="#pageAddPlayer" data-role="button" data-icon="plus">Player</a>
-            -->
+    <div data-role="content">
+        <input type="hidden" name="pageGameSettings_Id" id="pageGameSettings_Id" />
+        <div data-role="fieldcontain">
+            <label>Team 1:</label><br />
+            <select name="pageGameSettings_t1p1" id="pageGameSettings_t1p1"><option>Karn</option><option>Jessica</option><option>More item</option></select>
+            <select name="pageGameSettings_t1p2" id="pageGameSettings_t1p2"><option>Karn</option><option>Jessica</option><option>More item</option></select>
+        </div>	
+        <div data-role="fieldcontain">
+            <label>Team 2:</label><br />
+            <select name="pageGameSettings_t2p1" id="pageGameSettings_t2p1"><option>Karn</option><option>Jessica</option><option>More item</option></select>
+            <select name="pageGameSettings_t2p2" id="pageGameSettings_t2p2"><option>Karn</option><option>Jessica</option><option>More item</option></select>
         </div>
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pageListGames');" /></div>
+            <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updateGame($('#pageGameSettings_Id').val());" /></div>	   
+        </fieldset>
     </div>
-    
-    <div id="partialPlayerSettings" >
-        <div data-role="content">
-            <div data-role="fieldcontain">
-                <label for="playerName{{Id}}">Player Name:</label>
-                <input type="text" name="playerName{{Id}}" id="playerName{{Id}}" value="{{Name}}"  />
-                <input type="hidden" name="playerId{{Id}}" id="playerId{{Id}}" value="{{Id}}"  />
-            </div>	
-            <input type="button" value="{{ButtonText}}" onclick="Foosball.DOMHelper.updatePlayer($('#playerId{{Id}}').val(), $('#playerName{{Id}}').val());" />
-        </div>
-    </div>
-
-    <div id="partialGameSettings">
-        <div data-role="content">
-            <div data-role="fieldcontain">
-                <label for="playerName{{Id}}">Game Name:</label>
-                <input type="text" name="playerName{{Id}}" id="playerName{{Id}}" value="{{Name}}"  />
-                <input type="hidden" name="playerId{{Id}}" id="playerId{{Id}}" value="{{Id}}"  />
-            </div>	
-            <input type="button" value="Update" onclick="Foosball.DOMHelper.updateGame();" />
-        </div>
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#pageListGames" data-role="button" data-icon="grid">Games</a>
+        <a href="#pageListPlayers" data-role="button" data-icon="grid">Players</a>
     </div>
 </div>
 
 
+
+
 </body>
 <script language="javascript" type="text/javascript">
+// __TODO__ 
+// Right now we're adding a new page for each Player/Game Settings page.
+// Might be better if we have one page, and just reload the values each
+// time we go to it.  That way we don't clutter up the DOM.
+
 var Foosball = Foosball || {};
 
 Foosball.DOMHelper = function () { }
@@ -109,19 +126,17 @@ Foosball.DOMHelper.initialize = function (name) {
 }
 Foosball.DOMHelper.addPlayer = function () {
     var newId = system.addPlayer();
-    system.gotoPagePlayer(newId);
+    system.gotoPagePlayerSettings(newId);
 }
 Foosball.DOMHelper.addGame = function () {
     var newId = system.addGame();
-    system.gotoPageGame(newId);
+    system.gotoPageGameSettings(newId);
 }
-Foosball.DOMHelper.updatePlayer = function (id, name) {
-    system.updatePlayer(id, name); 
-    $("#playerId").val("");
-    $("#playerName").val("");
+Foosball.DOMHelper.updatePlayer = function (id) {
+    system.updatePlayer(id, $('#pagePlayerSettings_Name').val());
     $.mobile.changePage("#pageListPlayers");
 }
-Foosball.DOMHelper.updateGame = function (id, name) {
+Foosball.DOMHelper.updateGame = function (id) {
     alert("__TODO__ add Foosball.DOMHelper.updateGame()");
 }
 
@@ -150,8 +165,8 @@ Foosball.System.prototype.refreshPlayerList = function () {
     $("#playerList").html('');
     for(var ii in this.Players) {
         $("#playerList").append(
-            "<li><a href='#pagePlayerDetails"+ this.Players[ii].Id +
-            "' onclick='system.gotoPagePlayer("+ this.Players[ii].Id +"); return false;'>"+ 
+            "<li><a href='#'" +
+            " onclick='system.gotoPagePlayerSettings("+ this.Players[ii].Id +"); return false;'>"+ 
             this.Players[ii].Id +": "+ this.Players[ii].Name +"</a></li>"
         );
     }
@@ -169,11 +184,14 @@ Foosball.System.prototype.refreshGameList = function () {
         try { t2p1 = this.Players[this.Games[ii].Team2.Player1].Name; } catch (error) { }
         try { t2p2 = this.Players[this.Games[ii].Team2.Player2].Name; } catch (error) { }
 
+        var t1 = (t1p1 == t1p2 ? t1p1 : t1p1 + " / " + t1p2);
+        var t2 = (t2p1 == t2p2 ? t2p1 : t2p1 + " / " + t2p2);
+
         $("#gameList").append(
-            "<li><a href='#pageGameDetails" + this.Games[ii].Id +
-                "' onclick='system.gotoPageGame(" + this.Games[ii].Id + "); return false;'>" +
+            "<li><a href='#'" +
+                " onclick='system.gotoPageGameSettings(" + this.Games[ii].Id + "); return false;'>" +
                 this.Games[ii].Id + ": " +
-                t1p1 + " / " + t1p2 + " vs " + t2p1 + " / " + t2p2 +
+                t1 + " vs " + t2 +
             "</a></li>"
         );
     }
@@ -181,45 +199,20 @@ Foosball.System.prototype.refreshGameList = function () {
         $("#gameList").listview('refresh');
     } catch (error) { }
 }
-Foosball.System.prototype.gotoPagePlayer = function (id) {
-    // if this page hasn't been loaded, then load it
-    if ($("#pagePlayerDetails" + id).html() == null) {
-        var header = $("#partialHeader").html();
-        header = header.replace(/{{Title}}/g, "Player #" + this.Players[id].Id);
-        var footer = $("#partialFooter").html();
+Foosball.System.prototype.gotoPagePlayerSettings = function (id) {
+    $("#pagePlayerSettings_Title").html("Player #" + this.Players[id].Id);
 
-        var content = $("#partialPlayerSettings").html();
-        content = content.replace(/{{Id}}/g, this.Players[id].Id);
-        content = content.replace(/{{Name}}/g, this.Players[id].Name);
-        content = content.replace(/{{ButtonText}}/g, "Update");
+    $("#pagePlayerSettings_Id").val(this.Players[id].Id);
+    $("#pagePlayerSettings_Name").val(this.Players[id].Name);
 
-
-        $("body").append("<div data-role='page' id='pagePlayerDetails" + id + "'>" + header + content + footer + "</div>");
-        $.mobile.initializePage();
-    }
-
-    // go to the page
-    $.mobile.changePage("#pagePlayerDetails" + id, "fade", false, true);
+    $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
 }
-Foosball.System.prototype.gotoPageGame = function (id) {
-    // if this page hasn't been loaded, then load it
-    if ($("#pageGameDetails" + id).html() == null) {
-        var header = $("#partialHeader").html();
-        header = header.replace(/{{Title}}/g, "Game #" + this.Games[id].Id);
-        var footer = $("#partialFooter").html();
+Foosball.System.prototype.gotoPageGameSettings = function (id) {
+    $("#pageGameSettings_Title").html("Game #" + this.Players[id].Id);
 
-        var content = $("#partialGameSettings").html();
-        content = content.replace(/{{Id}}/g, this.Games[id].Id);
-        content = content.replace(/{{Name}}/g, this.Games[id].Name);
-        content = content.replace(/{{ButtonText}}/g, "Update");
+    $("#pageGameSettings_Id").val(this.Players[id].Id);
 
-
-        $("body").append("<div data-role='page' id='pageGameDetails" + id + "'>" + header + content + footer + "</div>");
-        $.mobile.initializePage();
-    }
-
-    // go to the page
-    $.mobile.changePage("#pageGameDetails" + id, "fade", false, true);
+    $.mobile.changePage("#pageGameSettings", "fade", false, true);
 }
 Foosball.System.prototype.addPlayer = function () {
     var newId = this.Players.length;
