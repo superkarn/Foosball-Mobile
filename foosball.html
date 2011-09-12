@@ -19,6 +19,7 @@
 <body>
 
 
+
 <div id="pageListGames" data-role="page"> 
     <div data-role="header" data-position="inline">
         <h1>Game List</h1>
@@ -31,7 +32,7 @@
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
         <a href="#pageListGames" data-role="button" data-icon="grid" class="ui-btn-active ui-state-persist">Games</a>
         <a href="#pageListPlayers" data-role="button" data-icon="grid">Players</a>
-        <a href="#" data-role="button" data-icon="plus">Game</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
@@ -48,7 +49,7 @@
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
         <a href="#pageListGames" data-role="button" data-icon="grid">Games</a>
         <a href="#pageListPlayers" data-role="button" data-icon="grid" class="ui-btn-active ui-state-persist">Players</a>
-        <a href="#pageAddGame" data-role="button" data-icon="plus">Game</a>
+        <a href="#pageAddGame" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
@@ -104,21 +105,24 @@ var Foosball = Foosball || {};
 
 Foosball.DOMHelper = function () { }
 Foosball.DOMHelper.initialize = function (name) { 
-    // load pages
-}
-Foosball.DOMHelper.addGame = function () {
-    var newId = system.addGame();
-    system.gotoPageGame(newId);
+    // initialize
 }
 Foosball.DOMHelper.addPlayer = function () {
     var newId = system.addPlayer();
     system.gotoPagePlayer(newId);
+}
+Foosball.DOMHelper.addGame = function () {
+    var newId = system.addGame();
+    system.gotoPageGame(newId);
 }
 Foosball.DOMHelper.updatePlayer = function (id, name) {
     system.updatePlayer(id, name); 
     $("#playerId").val("");
     $("#playerName").val("");
     $.mobile.changePage("#pageListPlayers");
+}
+Foosball.DOMHelper.updateGame = function (id, name) {
+    alert("__TODO__ add Foosball.DOMHelper.updateGame()");
 }
 
 
@@ -157,15 +161,24 @@ Foosball.System.prototype.refreshPlayerList = function () {
 }
 Foosball.System.prototype.refreshGameList = function () {
     $("#gameList").html('');
-    for(var ii in this.Games) {
+    for (var ii in this.Games) {
+
+        var t1p1 = t1p2 = t2p1 = t2p2 = "??";
+        try { t1p1 = this.Players[this.Games[ii].Team1.Player1].Name; } catch (error) { }
+        try { t1p2 = this.Players[this.Games[ii].Team1.Player2].Name; } catch (error) { }
+        try { t2p1 = this.Players[this.Games[ii].Team2.Player1].Name; } catch (error) { }
+        try { t2p2 = this.Players[this.Games[ii].Team2.Player2].Name; } catch (error) { }
+
         $("#gameList").append(
-            "<li><a href='#pageGameDetails"+ this.Games[ii].Id +
-            "' onclick='system.gotoPageGame("+ this.Games[ii].Id +"); return false;'>"+ 
-            this.Games[ii].Id +": "+ this.Games[ii].Team1 +" vs "+ this.Games[ii].Team2  +"</a></li>"
+            "<li><a href='#pageGameDetails" + this.Games[ii].Id +
+                "' onclick='system.gotoPageGame(" + this.Games[ii].Id + "); return false;'>" +
+                this.Games[ii].Id + ": " +
+                t1p1 + " / " + t1p2 + " vs " + t2p1 + " / " + t2p2 +
+            "</a></li>"
         );
     }
-    try { 
-        $("#gameList").listview('refresh'); 
+    try {
+        $("#gameList").listview('refresh');
     } catch (error) { }
 }
 Foosball.System.prototype.gotoPagePlayer = function (id) {
@@ -189,7 +202,24 @@ Foosball.System.prototype.gotoPagePlayer = function (id) {
     $.mobile.changePage("#pagePlayerDetails" + id, "fade", false, true);
 }
 Foosball.System.prototype.gotoPageGame = function (id) {
-    alert("__TODO__ add Foosball.System.prototype.gotoPageGame()");
+    // if this page hasn't been loaded, then load it
+    if ($("#pageGameDetails" + id).html() == null) {
+        var header = $("#partialHeader").html();
+        header = header.replace(/{{Title}}/g, "Game #" + this.Games[id].Id);
+        var footer = $("#partialFooter").html();
+
+        var content = $("#partialGameSettings").html();
+        content = content.replace(/{{Id}}/g, this.Games[id].Id);
+        content = content.replace(/{{Name}}/g, this.Games[id].Name);
+        content = content.replace(/{{ButtonText}}/g, "Update");
+
+
+        $("body").append("<div data-role='page' id='pageGameDetails" + id + "'>" + header + content + footer + "</div>");
+        $.mobile.initializePage();
+    }
+
+    // go to the page
+    $.mobile.changePage("#pageGameDetails" + id, "fade", false, true);
 }
 Foosball.System.prototype.addPlayer = function () {
     var newId = this.Players.length;
@@ -214,7 +244,7 @@ Foosball.System.prototype.addGame = function () {
     
     this.Games[newId] = newItem;
     this.saveState();
-    this.refreshPlayerList();
+    this.refreshGameList();
     
     return newId;
 }
@@ -222,6 +252,9 @@ Foosball.System.prototype.updatePlayer = function (id, name) {
     this.Players[id].Name = name;
     this.saveState();
     this.refreshPlayerList();
+}
+Foosball.System.prototype.updateGame = function (id, name) {
+    alert("__TODO__ add Foosball.System.prototype.updateGame()");
 }
 
 Foosball.Player = function () {
