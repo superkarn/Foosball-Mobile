@@ -198,22 +198,25 @@ Foosball.System.prototype.refreshPlayerList = function () {
 Foosball.System.prototype.refreshGameList = function () {
     $("#gameList").html('');
     for (var ii in this.Games) {
+        var displayName = this.Games[ii].Name;
+        if ((displayName + "") == "") {
+            // get the player names to display 
+            var t1p1 = t1p2 = t2p1 = t2p2 = "??";
+            try { t1p1 = this.Players[this.Games[ii].Team1.Player1].Name; } catch (error) { }
+            try { t1p2 = this.Players[this.Games[ii].Team1.Player2].Name; } catch (error) { }
+            try { t2p1 = this.Players[this.Games[ii].Team2.Player1].Name; } catch (error) { }
+            try { t2p2 = this.Players[this.Games[ii].Team2.Player2].Name; } catch (error) { }
 
-        // get the player names to display
-        var t1p1 = t1p2 = t2p1 = t2p2 = "??";
-        try { t1p1 = this.Players[this.Games[ii].Team1.Player1].Name; } catch (error) { }
-        try { t1p2 = this.Players[this.Games[ii].Team1.Player2].Name; } catch (error) { }
-        try { t2p1 = this.Players[this.Games[ii].Team2.Player1].Name; } catch (error) { }
-        try { t2p2 = this.Players[this.Games[ii].Team2.Player2].Name; } catch (error) { }
+            var t1 = (t1p1 == t1p2 ? t1p1 : t1p1 + " / " + t1p2);
+            var t2 = (t2p1 == t2p2 ? t2p1 : t2p1 + " / " + t2p2);
 
-        var t1 = (t1p1 == t1p2 ? t1p1 : t1p1 + " / " + t1p2);
-        var t2 = (t2p1 == t2p2 ? t2p1 : t2p1 + " / " + t2p2);
+            displayName = t1 + " vs " + t2;
+        }
 
         $("#gameList").append(
             "<li><a href='#'" +
                 " onclick='system.gotoPageGameSettings(" + this.Games[ii].Id + "); return false;'>" +
-                this.Games[ii].Id + ": " +
-                t1 + " vs " + t2 +
+                this.Games[ii].Id + ": " + displayName +
             "</a></li>"
         );
     }
