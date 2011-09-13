@@ -15,8 +15,30 @@
     <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
     
     <style type="text/css">
-        .hidden {
+        .hidden 
+        {
             display:none;
+        }
+        
+        .scores 
+        {
+            font-size:2em;
+            text-align:center;
+        }
+        .winningScore
+        {
+            color:Green;
+            font-weight:bold;
+        }
+        .losingScore
+        {
+        }
+        
+        .scoreButton
+        {
+            display:inline-block;
+            height:100px;
+            vertical-align:middle;
         }
     </style>
 </head>
@@ -119,6 +141,24 @@
     </div>
     <div data-role="content">
         <input type="hidden" name="pageGameDetails_Id" id="pageGameDetails_Id" />
+        <div id="pageGameDetails_Scores" class="scores"></div>
+
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><a href="#" id="pageGameDetails_t1p1" data-role="button" data-theme="a"><span class="scoreButton">Karn (5)</span></a></div>
+            <div class="ui-block-b"><a href="#" id="pageGameDetails_t1p2" data-role="button" data-theme="a"><span class="scoreButton">John (4)</span></a></div>	   
+        </fieldset>
+        
+        <br />
+        <br />
+        <br />
+        
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><a href="#" id="pageGameDetails_t2p1" data-role="button" data-theme="c"><span class="scoreButton">Cory (6)</span></a></div>
+            <div class="ui-block-b"><a href="#" id="pageGameDetails_t2p2" data-role="button" data-theme="c"><span class="scoreButton">Ash (1)</span></a></div>	   
+        </fieldset>
+            
+            
+
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
         <a href="#pageListGames" data-role="button">Games</a>
@@ -161,8 +201,7 @@ Foosball.DOMHelper.updateGame = function (id) {
         $('#pageGameSettings_t2p1').val(),
         $('#pageGameSettings_t2p2').val()
     );
-
-    //$.mobile.changePage("#pageDetailsGame");
+    system.gotoPageGameDetails(id);
 }
 
 
@@ -259,6 +298,19 @@ Foosball.System.prototype.gotoPageGameDetails = function (id) {
     $("#pageGameDetails_Id").val(this.Games[id].Id);
     $("#pageGameDetails_Name").val(this.Games[id].Name);
 
+    var scores = this.getScores(id);
+    var scoresHtml = "";
+    if (scores[0] > scores[1]) {
+        scoresHtml = "<span class='winningScore'>" + scores[0] + "</span> - <span class='losingScore'>" + scores[1] + "</span>";
+    } else if (scores[0] < scores[1]) {
+        scoresHtml = "<span class='losingScore'>" + scores[0] + "</span> - <span class='winningScore'>" + scores[1] + "</span>";
+    } else {
+        scoresHtml = "<span>" + scores[0] + "</span> - <span>" + scores[1] + "</span>";
+    }
+
+
+    $("#pageGameDetails_Scores").html(scoresHtml);
+
 
     var t1p1 = t1p2 = t2p1 = t2p2 = -1;
     try { t1p1 = this.Players[this.Games[id].Team1.Player1].Id; } catch (error) { }
@@ -323,8 +375,8 @@ Foosball.System.prototype.updateGame = function (id, name, t1p1, t1p2, t2p1, t2p
 
 
 Foosball.System.prototype.getGameName = function (id) {
-    var displayName = this.Games[id].Name;
-    if ((displayName + "") == "") {
+    var result = this.Games[id].Name;
+    if ((result + "") == "") {
         // get the player names to display 
         var t1p1 = t1p2 = t2p1 = t2p2 = "??";
         try { t1p1 = this.Players[this.Games[id].Team1.Player1].Name; } catch (error) { }
@@ -335,9 +387,15 @@ Foosball.System.prototype.getGameName = function (id) {
         var t1 = (t1p1 == t1p2 ? t1p1 : t1p1 + " / " + t1p2);
         var t2 = (t2p1 == t2p2 ? t2p1 : t2p1 + " / " + t2p2);
 
-        displayName = t1 + " vs " + t2;
+        result = t1 + " vs " + t2;
     }
-    return displayName;
+    return result;
+}
+Foosball.System.prototype.getScores = function (id) {
+    var result = new Array();
+    result[0] = 9;
+    result[1] = 7;
+    return result;
 }
 
 Foosball.Player = function () {
