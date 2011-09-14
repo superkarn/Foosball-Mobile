@@ -36,7 +36,6 @@
         
         .scoreButton
         {
-            display:inline-block;
             height:100px;
             vertical-align:middle;
         }
@@ -58,8 +57,8 @@
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
         <a href="#pageListGames" data-role="button" class="ui-btn-active ui-state-persist">Games</a>
         <a href="#pageListPlayers" data-role="button">Players</a>
-        <a href="#addGame" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#addPlayer" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
 
@@ -75,8 +74,8 @@
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
         <a href="#pageListGames" data-role="button">Games</a>
         <a href="#pageListPlayers" data-role="button" class="ui-btn-active ui-state-persist">Players</a>
-        <a href="#addGame" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#addPlayer" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
 
@@ -136,7 +135,7 @@
 
 
 <div id="pageGameDetails" data-role="page">
-    <div data-role="header" data-position="inline">
+    <div data-role="header">
         <h1 id="pageGameDetails_Title"></h1>
     </div>
     <div data-role="content">
@@ -144,17 +143,42 @@
         <div id="pageGameDetails_Scores" class="scores"></div>
 
         <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><a href="#" id="pageGameDetails_t1p1" data-role="button" data-theme="a"><span class="scoreButton">Karn (5)</span></a></div>
-            <div class="ui-block-b"><a href="#" id="pageGameDetails_t1p2" data-role="button" data-theme="a"><span class="scoreButton">John (4)</span></a></div>	   
+            <div class="ui-block-a">
+                <a href="#" data-role="button" data-theme="a" class="scoreButton" 
+                    onclick="Foosball.DOMHelper.addPoint('t1p1');">
+                    <input type="hidden" id="pageGameDetails_t1p1Id" />
+                    <span id="pageGameDetails_t1p1Name"></span><br />
+                    (<span id="pageGameDetails_t1p1Points"></span>)
+                </a>
+            </div>
+            <div class="ui-block-b">
+                <a href="#" data-role="button" data-theme="a" class="scoreButton" 
+                    onclick="Foosball.DOMHelper.addPoint('t1p2');">
+                    <input type="hidden" id="pageGameDetails_t1p2Id" />
+                    <span id="pageGameDetails_t1p2Name"></span><br />
+                    (<span id="pageGameDetails_t1p2Points"></span>)
+                </a>
+            </div>	   
         </fieldset>
         
-        <br />
-        <br />
-        <br />
         
         <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><a href="#" id="pageGameDetails_t2p1" data-role="button" data-theme="c"><span class="scoreButton">Cory (6)</span></a></div>
-            <div class="ui-block-b"><a href="#" id="pageGameDetails_t2p2" data-role="button" data-theme="c"><span class="scoreButton">Ash (1)</span></a></div>	   
+            <div class="ui-block-a">
+                <a href="#" data-role="button" data-theme="c" class="scoreButton" 
+                    onclick="Foosball.DOMHelper.addPoint('t2p1');">
+                    <input type="hidden" id="pageGameDetails_t2p1Id" />
+                    <span id="pageGameDetails_t2p1Name"></span><br />
+                    (<span id="pageGameDetails_t2p1Points"></span>)
+                </a>
+            </div>
+            <div class="ui-block-b">
+                <a href="#" data-role="button" data-theme="c" class="scoreButton" 
+                    onclick="Foosball.DOMHelper.addPoint('t2p2');">
+                    <input type="hidden" id="pageGameDetails_t2p2Id" />
+                    <span id="pageGameDetails_t2p2Name"></span><br />
+                    (<span id="pageGameDetails_t2p2Points"></span>)
+                </a>
+            </div>	   
         </fieldset>
             
             
@@ -173,7 +197,9 @@
 // __TODO__ 
 // - Right now we're saving the whole Foosball.System as one object in localStorage.
 //   We can improve this by breaking the object up and saving individual objects separately.
+// - Look into saving data to Dropbox
 // - We don't have "foreign key" check.  Could use it, but low priority right now.
+
 
 var Foosball = Foosball || {};
 
@@ -189,19 +215,38 @@ Foosball.DOMHelper.addGame = function () {
     var newId = system.addGame();
     system.gotoPageGameSettings(newId);
 }
-Foosball.DOMHelper.updatePlayer = function (id) {
-    system.updatePlayer(id, $('#pagePlayerSettings_Name').val());
+Foosball.DOMHelper.updatePlayer = function (playerId) {
+    system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
     $.mobile.changePage("#pageListPlayers");
 }
-Foosball.DOMHelper.updateGame = function (id) {
-    system.updateGame(id,
+Foosball.DOMHelper.updateGame = function (gameId) {
+    system.updateGame(gameId,
         $('#pageGameSettings_Name').val(),
         $('#pageGameSettings_t1p1').val(),
         $('#pageGameSettings_t1p2').val(),
         $('#pageGameSettings_t2p1').val(),
         $('#pageGameSettings_t2p2').val()
     );
-    system.gotoPageGameDetails(id);
+    system.gotoPageGameDetails(gameId);
+}
+Foosball.DOMHelper.addPoint = function (position) {
+    system.addPoint($('#pageGameDetails_Id').val(), $('#pageGameDetails_' + position + 'Id').val());
+
+    $('#pageGameDetails_' + position + 'Points').html(parseInt($('#pageGameDetails_' + position + 'Points').html()) + 1);
+    $('#pageGameDetails_Scores').html(Foosball.DOMHelper.getScoresHtml($('#pageGameDetails_Id').val()));
+}
+
+Foosball.DOMHelper.getScoresHtml = function (gameId) {
+    var result = "";
+    var scores = system.getScores(gameId);
+    if (scores[0] > scores[1]) {
+        result = "<span class='winningScore'>" + scores[0] + "</span> - <span class='losingScore'>" + scores[1] + "</span>";
+    } else if (scores[0] < scores[1]) {
+        result = "<span class='losingScore'>" + scores[0] + "</span> - <span class='winningScore'>" + scores[1] + "</span>";
+    } else {
+        result = "<span>" + scores[0] + "</span> - <span>" + scores[1] + "</span>";
+    }
+    return result;
 }
 
 
@@ -259,26 +304,28 @@ Foosball.System.prototype.refreshGameList = function () {
     }
     try { $("#gameList").listview('refresh'); } catch (error) { }
 }
-Foosball.System.prototype.gotoPagePlayerSettings = function (id) {
-    $("#pagePlayerSettings_Title").html("Player #" + this.Players[id].Id);
+Foosball.System.prototype.gotoPagePlayerSettings = function (playerId) {
+    $("#pagePlayerSettings_Title").html("Player #" + this.Players[playerId].Id);
 
-    $("#pagePlayerSettings_Id").val(this.Players[id].Id);
-    $("#pagePlayerSettings_Name").val(this.Players[id].Name);
+    $("#pagePlayerSettings_Id").val(this.Players[playerId].Id);
+    $("#pagePlayerSettings_Name").val(this.Players[playerId].Name);
 
     $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
 }
-Foosball.System.prototype.gotoPageGameSettings = function (id) {
-    $("#pageGameSettings_Title").html("Game #" + this.Games[id].Id);
+Foosball.System.prototype.gotoPageGameSettings = function (gameId) {
+    $("#pageGameSettings_Title").html("Game #" + this.Games[gameId].Id);
 
-    $("#pageGameSettings_Id").val(this.Games[id].Id);
-    $("#pageGameSettings_Name").val(this.Games[id].Name);
+    $("#pageGameSettings_Id").val(this.Games[gameId].Id);
+    $("#pageGameSettings_Name").val(this.Games[gameId].Name);
 
 
     var t1p1 = t1p2 = t2p1 = t2p2 = -1;
-    try { t1p1 = this.Players[this.Games[id].Team1.Player1].Id; } catch (error) { }
-    try { t1p2 = this.Players[this.Games[id].Team1.Player2].Id; } catch (error) { }
-    try { t2p1 = this.Players[this.Games[id].Team2.Player1].Id; } catch (error) { }
-    try { t2p2 = this.Players[this.Games[id].Team2.Player2].Id; } catch (error) { }
+
+    // we check this to make sure the PlayerId is valid (aka exists in the Players list)
+    try { t1p1 = this.Players[this.Games[gameId].Team1.Player1Id].Id; } catch (error) { }
+    try { t1p2 = this.Players[this.Games[gameId].Team1.Player2Id].Id; } catch (error) { }
+    try { t2p1 = this.Players[this.Games[gameId].Team2.Player1Id].Id; } catch (error) { }
+    try { t2p2 = this.Players[this.Games[gameId].Team2.Player2Id].Id; } catch (error) { }
 
     $("#pageGameSettings_t1p1").val(t1p1);
     $("#pageGameSettings_t1p2").val(t1p2);
@@ -292,39 +339,36 @@ Foosball.System.prototype.gotoPageGameSettings = function (id) {
 
     $.mobile.changePage("#pageGameSettings", "fade", false, true);
 }
-Foosball.System.prototype.gotoPageGameDetails = function (id) {
-    $("#pageGameDetails_Title").html(this.getGameName(id));
+Foosball.System.prototype.gotoPageGameDetails = function (gameId) {
+    $("#pageGameDetails_Title").html(this.getGameName(gameId));
 
-    $("#pageGameDetails_Id").val(this.Games[id].Id);
-    $("#pageGameDetails_Name").val(this.Games[id].Name);
-
-    var scores = this.getScores(id);
-    var scoresHtml = "";
-    if (scores[0] > scores[1]) {
-        scoresHtml = "<span class='winningScore'>" + scores[0] + "</span> - <span class='losingScore'>" + scores[1] + "</span>";
-    } else if (scores[0] < scores[1]) {
-        scoresHtml = "<span class='losingScore'>" + scores[0] + "</span> - <span class='winningScore'>" + scores[1] + "</span>";
-    } else {
-        scoresHtml = "<span>" + scores[0] + "</span> - <span>" + scores[1] + "</span>";
-    }
+    $("#pageGameDetails_Id").val(this.Games[gameId].Id);
+    $("#pageGameDetails_Name").val(this.Games[gameId].Name);
+    $("#pageGameDetails_Scores").html(Foosball.DOMHelper.getScoresHtml(gameId));
 
 
-    $("#pageGameDetails_Scores").html(scoresHtml);
+    var t1p1Id = t1p2Id = t2p1Id = t2p2Id = -1;
+    var t1p1Name = t1p2Name = t2p1Name = t2p2Name = "??";
+    try { t1p1Id = this.Players[this.Games[gameId].Team1.Player1Id].Id; t1p1Name = this.Players[this.Games[gameId].Team1.Player1Id].Name; } catch (error) { }
+    try { t1p2Id = this.Players[this.Games[gameId].Team1.Player2Id].Id; t1p2Name = this.Players[this.Games[gameId].Team1.Player2Id].Name; } catch (error) { }
+    try { t2p1Id = this.Players[this.Games[gameId].Team2.Player1Id].Id; t2p1Name = this.Players[this.Games[gameId].Team2.Player1Id].Name; } catch (error) { }
+    try { t2p2Id = this.Players[this.Games[gameId].Team2.Player2Id].Id; t2p2Name = this.Players[this.Games[gameId].Team2.Player2Id].Name; } catch (error) { }
 
+    $("#pageGameDetails_t1p1Id").val(t1p1Id);
+    $("#pageGameDetails_t1p2Id").val(t1p2Id);
+    $("#pageGameDetails_t2p1Id").val(t2p1Id);
+    $("#pageGameDetails_t2p2Id").val(t2p2Id);
 
-    var t1p1 = t1p2 = t2p1 = t2p2 = -1;
-    try { t1p1 = this.Players[this.Games[id].Team1.Player1].Id; } catch (error) { }
-    try { t1p2 = this.Players[this.Games[id].Team1.Player2].Id; } catch (error) { }
-    try { t2p1 = this.Players[this.Games[id].Team2.Player1].Id; } catch (error) { }
-    try { t2p2 = this.Players[this.Games[id].Team2.Player2].Id; } catch (error) { }
+    $("#pageGameDetails_t1p1Name").html(t1p1Name);
+    $("#pageGameDetails_t1p2Name").html(t1p2Name);
+    $("#pageGameDetails_t2p1Name").html(t2p1Name);
+    $("#pageGameDetails_t2p2Name").html(t2p2Name);
 
-    $("#pageGameDetails_t1p1").val(t1p1);
-    $("#pageGameDetails_t1p2").val(t1p2);
-    $("#pageGameDetails_t2p1").val(t2p1);
-    $("#pageGameDetails_t2p2").val(t2p2);
+    $("#pageGameDetails_t1p1Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team1.Player1Id));
+    $("#pageGameDetails_t1p2Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team1.Player2Id));
+    $("#pageGameDetails_t2p1Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team2.Player1Id));
+    $("#pageGameDetails_t2p2Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team2.Player2Id));
 
-
-    // __TODO__
 
     $.mobile.changePage("#pageGameDetails", "fade", false, true);
 }
@@ -356,33 +400,40 @@ Foosball.System.prototype.addGame = function () {
 
     return newId;
 }
-Foosball.System.prototype.updatePlayer = function (id, name) {
-    this.Players[id].Name = name;
+Foosball.System.prototype.addPoint = function (gameId, playerId) {
+    var newPoint = new Foosball.Point();
+    newPoint.PlayerId = playerId;
+    newPoint.Timestamp = new Date();
+
+    this.Games[gameId].Points.push(newPoint);
+    this.saveState();
+}
+Foosball.System.prototype.updatePlayer = function (playerId, name) {
+    this.Players[playerId].Name = name;
 
     this.saveState();
     this.refreshPlayerList();
 }
-Foosball.System.prototype.updateGame = function (id, name, t1p1, t1p2, t2p1, t2p2) {
-    this.Games[id].Name = name;
-    this.Games[id].Team1.Player1 = t1p1;
-    this.Games[id].Team1.Player2 = t1p2;
-    this.Games[id].Team2.Player1 = t2p1;
-    this.Games[id].Team2.Player2 = t2p2;
+Foosball.System.prototype.updateGame = function (gameId, name, t1p1, t1p2, t2p1, t2p2) {
+    this.Games[gameId].Name = name;
+    this.Games[gameId].Team1.Player1Id = t1p1;
+    this.Games[gameId].Team1.Player2Id = t1p2;
+    this.Games[gameId].Team2.Player1Id = t2p1;
+    this.Games[gameId].Team2.Player2Id = t2p2;
 
     this.saveState();
     this.refreshGameList();
 }
 
 
-Foosball.System.prototype.getGameName = function (id) {
-    var result = this.Games[id].Name;
+Foosball.System.prototype.getGameName = function (gameId) {
+    var result = this.Games[gameId].Name;
     if ((result + "") == "") {
-        // get the player names to display 
         var t1p1 = t1p2 = t2p1 = t2p2 = "??";
-        try { t1p1 = this.Players[this.Games[id].Team1.Player1].Name; } catch (error) { }
-        try { t1p2 = this.Players[this.Games[id].Team1.Player2].Name; } catch (error) { }
-        try { t2p1 = this.Players[this.Games[id].Team2.Player1].Name; } catch (error) { }
-        try { t2p2 = this.Players[this.Games[id].Team2.Player2].Name; } catch (error) { }
+        try { t1p1 = this.Players[this.Games[gameId].Team1.Player1Id].Name; } catch (error) { console.log(error); }
+        try { t1p2 = this.Players[this.Games[gameId].Team1.Player2Id].Name; } catch (error) { }
+        try { t2p1 = this.Players[this.Games[gameId].Team2.Player1Id].Name; } catch (error) { }
+        try { t2p2 = this.Players[this.Games[gameId].Team2.Player2Id].Name; } catch (error) { }
 
         var t1 = (t1p1 == t1p2 ? t1p1 : t1p1 + " / " + t1p2);
         var t2 = (t2p1 == t2p2 ? t2p1 : t2p1 + " / " + t2p2);
@@ -391,10 +442,35 @@ Foosball.System.prototype.getGameName = function (id) {
     }
     return result;
 }
-Foosball.System.prototype.getScores = function (id) {
+Foosball.System.prototype.getScores = function (gameId) {
     var result = new Array();
-    result[0] = 9;
-    result[1] = 7;
+
+    var team1Points = team2Points = 0;
+    for (var ii in this.Games[gameId].Points) {
+        if (this.Games[gameId].Points[ii].PlayerId == this.Games[gameId].Team1.Player1Id ||
+            this.Games[gameId].Points[ii].PlayerId == this.Games[gameId].Team1.Player2Id) {
+            team1Points++;
+        }
+
+        if (this.Games[gameId].Points[ii].PlayerId == this.Games[gameId].Team2.Player1Id ||
+            this.Games[gameId].Points[ii].PlayerId == this.Games[gameId].Team2.Player2Id) {
+            team2Points++;
+        }
+    }
+
+    result[0] = team1Points;
+    result[1] = team2Points;
+    return result;
+}
+Foosball.System.prototype.getPointsByPlayer = function (gameId, playerId) {
+    var result = 0;
+
+    for (var ii in this.Games[gameId].Points) {
+        if (this.Games[gameId].Points[ii].PlayerId == playerId) {
+            result++;
+        }
+    }
+
     return result;
 }
 
@@ -412,13 +488,11 @@ Foosball.Game = function () {
     this.EndDate = null;
 }
 Foosball.Team = function () {
-    this.Player1 = null;
-    this.Player2 = null;
+    this.Player1Id = null;
+    this.Player2Id = null;
 }
 Foosball.Point = function () {
-    this.Id = 0;
-    this.Team = null;
-    this.Player = null;
+    this.PlayerId = null;
     this.Timestamp = null;
 }
 
