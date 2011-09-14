@@ -421,6 +421,7 @@ Foosball.System.prototype.updatePlayer = function (playerId, name) {
 
     this.saveState();
     this.refreshPlayerList();
+    this.refreshGameList();
 }
 Foosball.System.prototype.updateGame = function (gameId, name, t1p1, t1p2, t2p1, t2p2) {
     this.Games[gameId].Name = name;
