@@ -302,10 +302,11 @@ Foosball.System.prototype.refreshPlayerList = function () {
 Foosball.System.prototype.refreshGameList = function () {
     $("#gameList").html('');
     for (var ii in this.Games) {
+        var scores = this.getScores(this.Games[ii].Id);
         $("#gameList").append(
             "<li><a href='#pageGameDetails'" +
                 " onclick='system.gotoPageGameDetails(" + this.Games[ii].Id + "); return false;'>" +
-                this.Games[ii].Id + ": " + this.getGameName(ii) +
+                scores[0] + "-" + scores[1] + " " + this.getGameName(ii) +
             "</a></li>"
         );
     }
