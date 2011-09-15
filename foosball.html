@@ -120,17 +120,19 @@
     </div>
     <div data-role="content">
         <input type="hidden" name="pageGameSettings_Id" id="pageGameSettings_Id" />
+        <!--
         <div data-role="fieldcontain">
             <label for="pageGameSettings_Name">Game Name</label>
             <input type="text" name="pageGameSettings_Name" id="pageGameSettings_Name" />
-        </div>	
+        </div>
+        -->
         <div data-role="fieldcontain">
-            <label>Team 1</label><br />
+            <label>Black</label><br />
             <select name="pageGameSettings_t1p1" id="pageGameSettings_t1p1"></select>
             <select name="pageGameSettings_t1p2" id="pageGameSettings_t1p2"></select>
         </div>	
         <div data-role="fieldcontain">
-            <label>Team 2</label><br />
+            <label>White</label><br />
             <select name="pageGameSettings_t2p1" id="pageGameSettings_t2p1"></select>
             <select name="pageGameSettings_t2p2" id="pageGameSettings_t2p2"></select>
         </div>
@@ -280,6 +282,9 @@ Foosball.System.prototype.resumeState = function () {
     this.Players = data != null ? data.Players : new Array();
     this.Games = data != null ? data.Games : new Array();
 
+    // need to refresh both lists after resume
+    // but we're automatically refreshing the game list by calling gotoPageGameList()
+    this.refreshPlayerList();
     this.gotoPageGameList();
 }
 Foosball.System.prototype.saveState = function () {
@@ -450,7 +455,7 @@ Foosball.System.prototype.getGameName = function (gameId) {
     var result = this.Games[gameId].Name;
     if ((result + "") == "") {
         var t1p1 = t1p2 = t2p1 = t2p2 = "??";
-        try { t1p1 = this.Players[this.Games[gameId].Team1.Player1Id].Name; } catch (error) { console.log(error); }
+        try { t1p1 = this.Players[this.Games[gameId].Team1.Player1Id].Name; } catch (error) { }
         try { t1p2 = this.Players[this.Games[gameId].Team1.Player2Id].Name; } catch (error) { }
         try { t2p1 = this.Players[this.Games[gameId].Team2.Player1Id].Name; } catch (error) { }
         try { t2p2 = this.Players[this.Games[gameId].Team2.Player2Id].Name; } catch (error) { }
