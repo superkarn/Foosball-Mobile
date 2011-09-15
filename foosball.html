@@ -41,6 +41,11 @@
         {
         }
         
+        .caption
+        {
+            font-size:0.8em;
+        }
+        
         .scoreButton
         {
             height:100px;
@@ -52,7 +57,7 @@
 
 
 
-<div id="pageListGames" data-role="page"> 
+<div id="pageGameList" data-role="page"> 
     <div data-role="header" data-position="inline">
         <h1>Game List</h1>
     </div>
@@ -62,14 +67,14 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#pageListGames" data-role="button" class="ui-btn-active ui-state-persist">Games</a>
-        <a href="#pageListPlayers" data-role="button">Players</a>
+        <a href="#" data-role="button" onclick="system.gotoPageGameList();" class="ui-btn-active ui-state-persist">Games</a>
+        <a href="#" data-role="button" onclick="system.gotoPagePlayerList();">Players</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
 
-<div id="pageListPlayers" data-role="page"> 
+<div id="pagePlayerList" data-role="page"> 
     <div data-role="header" data-position="inline">
         <h1>Player List</h1>
     </div>
@@ -79,8 +84,8 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#pageListGames" data-role="button">Games</a>
-        <a href="#pageListPlayers" data-role="button" class="ui-btn-active ui-state-persist">Players</a>
+        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" onclick="system.gotoPagePlayerList();" class="ui-btn-active ui-state-persist">Players</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
@@ -99,13 +104,13 @@
             <input type="text" name="pagePlayerSettings_Name" id="pagePlayerSettings_Name" />
         </div>	
         <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pageListPlayers');" /></div>
+            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pagePlayerList');" /></div>
             <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#pagePlayerSettings_Id').val());" /></div>	   
         </fieldset>
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#pageListGames" data-role="button">Games</a>
-        <a href="#pageListPlayers" data-role="button">Players</a>
+        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" onclick="system.gotoPagePlayerList();">Players</a>
     </div>
 </div>
 
@@ -130,13 +135,13 @@
             <select name="pageGameSettings_t2p2" id="pageGameSettings_t2p2"></select>
         </div>
         <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pageListGames');" /></div>
+            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pageGameList');" /></div>
             <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updateGame($('#pageGameSettings_Id').val());" /></div>	   
         </fieldset>
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#pageListGames" data-role="button">Games</a>
-        <a href="#pageGameDetails" data-role="button" onclick="system.gotoPageGameDetails($('#pageGameSettings_Id').val());">Details</a>
+        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" onclick="system.gotoPageGameDetails($('#pageGameSettings_Id').val());">Details</a>
     </div>
 </div>
 
@@ -155,7 +160,8 @@
                     onclick="Foosball.DOMHelper.addPoint('t1p1');">
                     <input type="hidden" id="pageGameDetails_t1p1Id" />
                     <span id="pageGameDetails_t1p1Name"></span><br />
-                    (<span id="pageGameDetails_t1p1Points"></span>)
+                    (<span id="pageGameDetails_t1p1Points"></span>)<br />
+                    <span class="caption">Offense</span>
                 </a>
             </div>
             <div class="ui-block-b">
@@ -163,7 +169,8 @@
                     onclick="Foosball.DOMHelper.addPoint('t1p2');">
                     <input type="hidden" id="pageGameDetails_t1p2Id" />
                     <span id="pageGameDetails_t1p2Name"></span><br />
-                    (<span id="pageGameDetails_t1p2Points"></span>)
+                    (<span id="pageGameDetails_t1p2Points"></span>)<br />
+                    <span class="caption">Defense</span>
                 </a>
             </div>	   
         </fieldset>
@@ -172,18 +179,20 @@
         <fieldset class="ui-grid-a">
             <div class="ui-block-a">
                 <a href="#" data-role="button" data-theme="c" class="scoreButton" 
-                    onclick="Foosball.DOMHelper.addPoint('t2p1');">
-                    <input type="hidden" id="pageGameDetails_t2p1Id" />
-                    <span id="pageGameDetails_t2p1Name"></span><br />
-                    (<span id="pageGameDetails_t2p1Points"></span>)
+                    onclick="Foosball.DOMHelper.addPoint('t2p2');">
+                    <input type="hidden" id="pageGameDetails_t2p2Id" />
+                    <span id="pageGameDetails_t2p2Name"></span><br />
+                    (<span id="pageGameDetails_t2p2Points"></span>)<br />
+                    <span class="caption">Defense</span>
                 </a>
             </div>
             <div class="ui-block-b">
                 <a href="#" data-role="button" data-theme="c" class="scoreButton" 
-                    onclick="Foosball.DOMHelper.addPoint('t2p2');">
-                    <input type="hidden" id="pageGameDetails_t2p2Id" />
-                    <span id="pageGameDetails_t2p2Name"></span><br />
-                    (<span id="pageGameDetails_t2p2Points"></span>)
+                    onclick="Foosball.DOMHelper.addPoint('t2p1');">
+                    <input type="hidden" id="pageGameDetails_t2p1Id" />
+                    <span id="pageGameDetails_t2p1Name"></span><br />
+                    (<span id="pageGameDetails_t2p1Points"></span>)<br />
+                    <span class="caption">Offense</span>
                 </a>
             </div>	   
         </fieldset>
@@ -192,8 +201,8 @@
 
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#pageListGames" data-role="button">Games</a>
-        <a href="#pageGameSettings" data-role="button" onclick="system.gotoPageGameSettings($('#pageGameDetails_Id').val());">Settings</a>
+        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" onclick="system.gotoPageGameSettings($('#pageGameDetails_Id').val());">Settings</a>
     </div>
 </div>
 
@@ -224,7 +233,7 @@ Foosball.DOMHelper.addGame = function () {
 }
 Foosball.DOMHelper.updatePlayer = function (playerId) {
     system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
-    $.mobile.changePage("#pageListPlayers");
+    $.mobile.changePage("#pagePlayerList");
 }
 Foosball.DOMHelper.updateGame = function (gameId) {
     system.updateGame(gameId,
@@ -270,9 +279,8 @@ Foosball.System.prototype.resumeState = function () {
     var data = JSON.parse(localStorage.getItem(this.__namespace + "-" + this.__name));
     this.Players = data != null ? data.Players : new Array();
     this.Games = data != null ? data.Games : new Array();
-    
-    this.refreshPlayerList(); 
-    this.refreshGameList(); 
+
+    this.gotoPageGameList();
 }
 Foosball.System.prototype.saveState = function () {
     localStorage.setItem(this.__namespace + "-" + this.__name, JSON.stringify(this));
@@ -312,6 +320,10 @@ Foosball.System.prototype.refreshGameList = function () {
     }
     try { $("#gameList").listview('refresh'); } catch (error) { }
 }
+Foosball.System.prototype.gotoPagePlayerList = function () {
+    this.refreshPlayerList();
+    $.mobile.changePage("#pagePlayerList", "fade", false, true);
+}
 Foosball.System.prototype.gotoPagePlayerSettings = function (playerId) {
     $("#pagePlayerSettings_Title").html("Player #" + this.Players[playerId].Id);
 
@@ -319,6 +331,10 @@ Foosball.System.prototype.gotoPagePlayerSettings = function (playerId) {
     $("#pagePlayerSettings_Name").val(this.Players[playerId].Name);
 
     $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
+}
+Foosball.System.prototype.gotoPageGameList = function () {
+    this.refreshGameList();
+    $.mobile.changePage("#pageGameList", "fade", false, true);
 }
 Foosball.System.prototype.gotoPageGameSettings = function (gameId) {
     $("#pageGameSettings_Title").html("Game #" + this.Games[gameId].Id);
@@ -384,11 +400,10 @@ Foosball.System.prototype.addPlayer = function () {
     var newId = this.Players.length;
     var newItem = new Foosball.Player();
     newItem.Id = newId;
-    newItem.Name = "New";
+    newItem.Name = "";
     
     this.Players[newId] = newItem;
     this.saveState();
-    this.refreshPlayerList();
     
     return newId;
 }
@@ -397,14 +412,13 @@ Foosball.System.prototype.addGame = function () {
     var newId = this.Games.length;
     var newItem = new Foosball.Game();
     newItem.Id = newId;
-    newItem.Name = "New";
+    newItem.Name = "";
     newItem.Team1 = new Foosball.Team();
     newItem.Team2 = new Foosball.Team();
     newItem.StartDate = new Date();
 
     this.Games[newId] = newItem;
     this.saveState();
-    this.refreshGameList();
 
     return newId;
 }
@@ -420,8 +434,6 @@ Foosball.System.prototype.updatePlayer = function (playerId, name) {
     this.Players[playerId].Name = name;
 
     this.saveState();
-    this.refreshPlayerList();
-    this.refreshGameList();
 }
 Foosball.System.prototype.updateGame = function (gameId, name, t1p1, t1p2, t2p1, t2p2) {
     this.Games[gameId].Name = name;
@@ -431,7 +443,6 @@ Foosball.System.prototype.updateGame = function (gameId, name, t1p1, t1p2, t2p1,
     this.Games[gameId].Team2.Player2Id = t2p2;
 
     this.saveState();
-    this.refreshGameList();
 }
 
 
@@ -490,15 +501,15 @@ Foosball.Player = function () {
 Foosball.Game = function () {
     this.Id = 0;
     this.Name = "";
-    this.Team1 = null;
-    this.Team2 = null;
+    this.Team1 = null; // black
+    this.Team2 = null; // white
     this.Points = new Array();
     this.StartDate = null;
     this.EndDate = null;
 }
 Foosball.Team = function () {
-    this.Player1Id = null;
-    this.Player2Id = null;
+    this.Player1Id = null; // offense
+    this.Player2Id = null; // defense
 }
 Foosball.Point = function () {
     this.PlayerId = null;
