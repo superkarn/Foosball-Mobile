@@ -68,10 +68,7 @@
     
     <div data-role="content">
 
-        <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Players</a></div>
-            <div class="ui-block-b"><a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a></div>	   
-        </fieldset>
+        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Players</a>
         
         <br /><br /><br />
         
@@ -217,6 +214,7 @@
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
         <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageSystemSettings(true);">Back</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
 
@@ -360,6 +358,7 @@ Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId, transitionRevers
 }
 
 Foosball.DOMHelper.refreshGameList = function () {
+    system.Games.sort(system.sortByDateDesc);
     $("#gameList").html('');
     for (var ii in system.Games) {
         var scores = system.getScores(system.Games[ii].Id);
@@ -373,6 +372,7 @@ Foosball.DOMHelper.refreshGameList = function () {
     try { $("#gameList").listview('refresh'); } catch (error) { }
 }
 Foosball.DOMHelper.refreshPlayerList = function () {
+    system.Players.sort(system.sortByName);
     $("#playerList").html('');
     for (var ii in system.Players) {
         $("#playerList").append(
@@ -506,7 +506,6 @@ Foosball.System.prototype.updatePlayer = function (playerId, name) {
     this.saveState();
 }
 
-
 Foosball.System.prototype.getGameName = function (gameId) {
     var result = this.Games[gameId].Name;
     if ((result + "") == "") {
@@ -566,6 +565,26 @@ Foosball.System.prototype.getPointsByPlayer = function (gameId, playerId) {
 
     return result;
 }
+
+Foosball.System.prototype.sortByName = function (a, b) {
+    try {
+        if (a.Name < b.Name) return -1
+        if (a.Name > b.Name) return 1
+    } catch (error) { alert(error); }
+
+    // default is they're the same
+    return 0
+}
+Foosball.System.prototype.sortByDateDesc = function (a, b) {
+    try {
+        if (a.NameStartDate < b.StartDate) return 1
+        if (a.StartDate > b.StartDate) return -1
+    } catch (error) { alert(error); }
+
+    // default is they're the same
+    return 0
+}
+
 
 Foosball.Player = function () {
     this.Id = 0;
