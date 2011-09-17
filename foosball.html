@@ -62,16 +62,18 @@
     </div>
     
     <div data-role="content">
-        <a href="#" data-role="button" data-icon="grid" onclick="system.gotoPagePlayerList();">Players</a>
+        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Players</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="grid" onclick="system.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPageGameList();">Games</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#" data-role="button" data-icon="gear" onclick="system.gotoPageSystemSettings();" class="ui-btn-active ui-state-persist">System</a>
+        <a href="#" data-role="button" data-icon="gear" onclick="Foosball.DOMHelper.gotoPageSystemSettings();" class="ui-btn-active ui-state-persist">System</a>
     </div>
 </div>
+
+
 
 <div id="pageGameList" data-role="page"> 
     <div data-role="header" data-position="inline">
@@ -83,45 +85,9 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="grid" onclick="system.gotoPageGameList();" class="ui-btn-active ui-state-persist">Games</a>
+        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPageGameList();" class="ui-btn-active ui-state-persist">Games</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#" data-role="button" data-icon="gear" onclick="system.gotoPageSystemSettings();">System</a>
-    </div>
-</div>
-
-<div id="pagePlayerList" data-role="page"> 
-    <div data-role="header" data-position="inline">
-        <h1>Player List</h1>
-    </div>
-    
-    <div data-role="content">
-        <ul id="playerList" data-role="listview" data-filter="true" data-theme="c"></ul>
-    </div>
-    
-    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPageSystemSettings();">Back</a>
-    </div>
-</div>
-
-
-
-<div id="pagePlayerSettings" data-role="page">
-    <div data-role="header" data-position="inline">
-        <h1 id="pagePlayerSettings_Title"></h1>
-    </div>
-    <div data-role="content">
-        <input type="hidden" name="pagePlayerSettings_Id" id="pagePlayerSettings_Id" />
-        <div data-role="fieldcontain">
-            <label for="pagePlayerSettings_Name">Player Name</label>
-            <input type="text" name="pagePlayerSettings_Name" id="pagePlayerSettings_Name" />
-        </div>	
-        <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pagePlayerList');" /></div>
-            <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#pagePlayerSettings_Id').val());" /></div>	   
-        </fieldset>
-    </div>
-    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPagePlayerList();">Back</a>
+        <a href="#" data-role="button" data-icon="gear" onclick="Foosball.DOMHelper.gotoPageSystemSettings();">System</a>
     </div>
 </div>
 
@@ -153,10 +119,9 @@
         </fieldset>
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPageGameDetails($('#pageGameSettings_Id').val());">Back</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameDetails($('#pageGameSettings_Id').val());">Back</a>
     </div>
 </div>
-
 
 <div id="pageGameDetails" data-role="page">
     <div data-role="header">
@@ -213,8 +178,44 @@
 
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPageGameList();">Back</a>
-        <a href="#" data-role="button" onclick="system.gotoPageGameSettings($('#pageGameDetails_Id').val());">Settings</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameList();">Back</a>
+        <a href="#" data-role="button" onclick="Foosball.DOMHelper.gotoPageGameSettings($('#pageGameDetails_Id').val());">Settings</a>
+    </div>
+</div>
+
+
+
+<div id="pagePlayerList" data-role="page"> 
+    <div data-role="header" data-position="inline">
+        <h1>Player List</h1>
+    </div>
+    
+    <div data-role="content">
+        <ul id="playerList" data-role="listview" data-filter="true" data-theme="c"></ul>
+    </div>
+    
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageSystemSettings();">Back</a>
+    </div>
+</div>
+
+<div id="pagePlayerSettings" data-role="page">
+    <div data-role="header" data-position="inline">
+        <h1 id="pagePlayerSettings_Title"></h1>
+    </div>
+    <div data-role="content">
+        <input type="hidden" name="pagePlayerSettings_Id" id="pagePlayerSettings_Id" />
+        <div data-role="fieldcontain">
+            <label for="pagePlayerSettings_Name">Player Name</label>
+            <input type="text" name="pagePlayerSettings_Name" id="pagePlayerSettings_Name" />
+        </div>	
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pagePlayerList');" /></div>
+            <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#pagePlayerSettings_Id').val());" /></div>	   
+        </fieldset>
+    </div>
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Back</a>
     </div>
 </div>
 
@@ -232,20 +233,140 @@
 var Foosball = Foosball || {};
 
 Foosball.DOMHelper = function () { }
-Foosball.DOMHelper.initialize = function (name) { 
-    // initialize
+Foosball.DOMHelper.initialize = function (name) {
+    // need to refresh both lists after resume
+    // but we're automatically refreshing the game list by calling gotoPageGameList()
+    Foosball.DOMHelper.refreshPlayerList();
+    Foosball.DOMHelper.gotoPageGameList();
 }
+
+Foosball.DOMHelper.gotoPageSystemSettings = function () {
+    $.mobile.changePage("#pageSystemSettings", "fade", false, true);
+}
+Foosball.DOMHelper.gotoPagePlayerList = function () {
+    Foosball.DOMHelper.refreshPlayerList();
+    $.mobile.changePage("#pagePlayerList", "fade", false, true);
+}
+Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId) {
+    $("#pagePlayerSettings_Title").html("Player #" + system.Players[playerId].Id);
+
+    $("#pagePlayerSettings_Id").val(system.Players[playerId].Id);
+    $("#pagePlayerSettings_Name").val(system.Players[playerId].Name);
+
+    $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
+}
+Foosball.DOMHelper.gotoPageGameList = function () {
+    Foosball.DOMHelper.refreshGameList();
+    $.mobile.changePage("#pageGameList", "fade", false, true);
+}
+Foosball.DOMHelper.gotoPageGameSettings = function (gameId) {
+    $("#pageGameSettings_Title").html("Game #" + system.Games[gameId].Id);
+
+    $("#pageGameSettings_Id").val(system.Games[gameId].Id);
+    $("#pageGameSettings_Name").val(system.Games[gameId].Name);
+
+
+    var t1p1 = t1p2 = t2p1 = t2p2 = -1;
+
+    // we check this to make sure the PlayerId is valid (aka exists in the Players list)
+    try { t1p1 = system.Players[system.Games[gameId].Team1.Player1Id].Id; } catch (error) { }
+    try { t1p2 = system.Players[system.Games[gameId].Team1.Player2Id].Id; } catch (error) { }
+    try { t2p1 = system.Players[system.Games[gameId].Team2.Player1Id].Id; } catch (error) { }
+    try { t2p2 = system.Players[system.Games[gameId].Team2.Player2Id].Id; } catch (error) { }
+
+    $("#pageGameSettings_t1p1").val(t1p1);
+    $("#pageGameSettings_t1p2").val(t1p2);
+    $("#pageGameSettings_t2p1").val(t2p1);
+    $("#pageGameSettings_t2p2").val(t2p2);
+
+    try { $("#pageGameSettings_t1p1").selectmenu('refresh'); } catch (error) { }
+    try { $("#pageGameSettings_t1p2").selectmenu('refresh'); } catch (error) { }
+    try { $("#pageGameSettings_t2p1").selectmenu('refresh'); } catch (error) { }
+    try { $("#pageGameSettings_t2p2").selectmenu('refresh'); } catch (error) { }
+
+    $.mobile.changePage("#pageGameSettings", "fade", false, true);
+}
+Foosball.DOMHelper.gotoPageGameDetails = function (gameId) {
+    $("#pageGameDetails_Title").html(system.getGameName(gameId));
+
+    $("#pageGameDetails_Id").val(system.Games[gameId].Id);
+    $("#pageGameDetails_Name").val(system.Games[gameId].Name);
+    $("#pageGameDetails_Scores").html(Foosball.DOMHelper.getScoresHtml(gameId));
+
+
+    var t1p1Id = t1p2Id = t2p1Id = t2p2Id = -1;
+    var t1p1Name = t1p2Name = t2p1Name = t2p2Name = "??";
+    try { t1p1Id = system.Players[system.Games[gameId].Team1.Player1Id].Id; t1p1Name = system.Players[system.Games[gameId].Team1.Player1Id].Name; } catch (error) { }
+    try { t1p2Id = system.Players[system.Games[gameId].Team1.Player2Id].Id; t1p2Name = system.Players[system.Games[gameId].Team1.Player2Id].Name; } catch (error) { }
+    try { t2p1Id = system.Players[system.Games[gameId].Team2.Player1Id].Id; t2p1Name = system.Players[system.Games[gameId].Team2.Player1Id].Name; } catch (error) { }
+    try { t2p2Id = system.Players[system.Games[gameId].Team2.Player2Id].Id; t2p2Name = system.Players[system.Games[gameId].Team2.Player2Id].Name; } catch (error) { }
+
+    $("#pageGameDetails_t1p1Id").val(t1p1Id);
+    $("#pageGameDetails_t1p2Id").val(t1p2Id);
+    $("#pageGameDetails_t2p1Id").val(t2p1Id);
+    $("#pageGameDetails_t2p2Id").val(t2p2Id);
+
+    $("#pageGameDetails_t1p1Name").html(t1p1Name);
+    $("#pageGameDetails_t1p2Name").html(t1p2Name);
+    $("#pageGameDetails_t2p1Name").html(t2p1Name);
+    $("#pageGameDetails_t2p2Name").html(t2p2Name);
+
+    $("#pageGameDetails_t1p1Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team1.Player1Id));
+    $("#pageGameDetails_t1p2Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team1.Player2Id));
+    $("#pageGameDetails_t2p1Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team2.Player1Id));
+    $("#pageGameDetails_t2p2Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team2.Player2Id));
+
+
+    $.mobile.changePage("#pageGameDetails", "fade", false, true);
+}
+
+Foosball.DOMHelper.refreshPlayerList = function () {
+    $("#playerList").html('');
+    for (var ii in system.Players) {
+        $("#playerList").append(
+            "<li><a href='#pagePlayerSettings'" +
+            " onclick='Foosball.DOMHelper.gotoPagePlayerSettings(" + system.Players[ii].Id + "); return false;'>" +
+            system.Players[ii].Id + ": " + system.Players[ii].Name + "</a></li>"
+        );
+    }
+    try { $("#playerList").listview('refresh'); } catch (error) { }
+
+
+    // also refresh the player list in the GameSettings page
+    var playerOptions = "<option value='-1'>Select Player</option>";
+    for (var ii in system.Players) {
+        playerOptions += "<option value='" + system.Players[ii].Id + "'>" + system.Players[ii].Name + "</option>";
+    }
+    $("#pageGameSettings_t1p1").html(playerOptions);
+    $("#pageGameSettings_t1p2").html(playerOptions);
+    $("#pageGameSettings_t2p1").html(playerOptions);
+    $("#pageGameSettings_t2p2").html(playerOptions);
+}
+Foosball.DOMHelper.refreshGameList = function () {
+    $("#gameList").html('');
+    for (var ii in system.Games) {
+        var scores = system.getScores(system.Games[ii].Id);
+        $("#gameList").append(
+            "<li><a href='#pageGameDetails'" +
+                " onclick='Foosball.DOMHelper.gotoPageGameDetails(" + system.Games[ii].Id + "); return false;'>" +
+                scores[0] + "-" + scores[1] + " " + system.getGameName(ii) +
+            "</a></li>"
+        );
+    }
+    try { $("#gameList").listview('refresh'); } catch (error) { }
+}
+
 Foosball.DOMHelper.addPlayer = function () {
     var newId = system.addPlayer();
-    system.gotoPagePlayerSettings(newId);
+    Foosball.DOMHelper.gotoPagePlayerSettings(newId);
 }
 Foosball.DOMHelper.addGame = function () {
     var newId = system.addGame();
-    system.gotoPageGameSettings(newId);
+    Foosball.DOMHelper.gotoPageGameSettings(newId);
 }
 Foosball.DOMHelper.updatePlayer = function (playerId) {
     system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
-    system.gotoPagePlayerList();
+    Foosball.DOMHelper.gotoPagePlayerList();
 }
 Foosball.DOMHelper.updateGame = function (gameId) {
     system.updateGame(gameId,
@@ -255,7 +376,7 @@ Foosball.DOMHelper.updateGame = function (gameId) {
         $('#pageGameSettings_t2p1').val(),
         $('#pageGameSettings_t2p2').val()
     );
-    system.gotoPageGameDetails(gameId);
+    Foosball.DOMHelper.gotoPageGameDetails(gameId);
 }
 Foosball.DOMHelper.addPoint = function (position) {
     system.addPoint($('#pageGameDetails_Id').val(), $('#pageGameDetails_' + position + 'Id').val());
@@ -263,7 +384,6 @@ Foosball.DOMHelper.addPoint = function (position) {
     $('#pageGameDetails_' + position + 'Points').html(parseInt($('#pageGameDetails_' + position + 'Points').html()) + 1);
     $('#pageGameDetails_Scores').html(Foosball.DOMHelper.getScoresHtml($('#pageGameDetails_Id').val()));
 }
-
 Foosball.DOMHelper.getScoresHtml = function (gameId) {
     var result = "";
     var scores = system.getScores(gameId);
@@ -292,127 +412,9 @@ Foosball.System.prototype.resumeState = function () {
     this.Players = data != null ? data.Players : new Array();
     this.Games = data != null ? data.Games : new Array();
 
-    // need to refresh both lists after resume
-    // but we're automatically refreshing the game list by calling gotoPageGameList()
-    this.refreshPlayerList();
-    this.gotoPageGameList();
 }
 Foosball.System.prototype.saveState = function () {
     localStorage.setItem(this.__namespace + "-" + this.__name, JSON.stringify(this));
-}
-Foosball.System.prototype.refreshPlayerList = function () {
-    $("#playerList").html('');
-    for (var ii in this.Players) {
-        $("#playerList").append(
-            "<li><a href='#pagePlayerSettings'" +
-            " onclick='system.gotoPagePlayerSettings(" + this.Players[ii].Id + "); return false;'>" +
-            this.Players[ii].Id + ": " + this.Players[ii].Name + "</a></li>"
-        );
-    }
-    try { $("#playerList").listview('refresh'); } catch (error) { }
-
-
-    // also refresh the player list in the GameSettings page
-    var playerOptions = "<option value='-1'>Select Player</option>";
-    for (var ii in this.Players) {
-        playerOptions += "<option value='" + this.Players[ii].Id + "'>" + this.Players[ii].Name + "</option>";
-    }
-    $("#pageGameSettings_t1p1").html(playerOptions);
-    $("#pageGameSettings_t1p2").html(playerOptions);
-    $("#pageGameSettings_t2p1").html(playerOptions);
-    $("#pageGameSettings_t2p2").html(playerOptions);
-}
-Foosball.System.prototype.refreshGameList = function () {
-    $("#gameList").html('');
-    for (var ii in this.Games) {
-        var scores = this.getScores(this.Games[ii].Id);
-        $("#gameList").append(
-            "<li><a href='#pageGameDetails'" +
-                " onclick='system.gotoPageGameDetails(" + this.Games[ii].Id + "); return false;'>" +
-                scores[0] + "-" + scores[1] + " " + this.getGameName(ii) +
-            "</a></li>"
-        );
-    }
-    try { $("#gameList").listview('refresh'); } catch (error) { }
-}
-Foosball.System.prototype.gotoPageSystemSettings = function () {
-    $.mobile.changePage("#pageSystemSettings", "fade", false, true);
-}
-Foosball.System.prototype.gotoPagePlayerList = function () {
-    this.refreshPlayerList();
-    $.mobile.changePage("#pagePlayerList", "fade", false, true);
-}
-Foosball.System.prototype.gotoPagePlayerSettings = function (playerId) {
-    $("#pagePlayerSettings_Title").html("Player #" + this.Players[playerId].Id);
-
-    $("#pagePlayerSettings_Id").val(this.Players[playerId].Id);
-    $("#pagePlayerSettings_Name").val(this.Players[playerId].Name);
-
-    $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
-}
-Foosball.System.prototype.gotoPageGameList = function () {
-    this.refreshGameList();
-    $.mobile.changePage("#pageGameList", "fade", false, true);
-}
-Foosball.System.prototype.gotoPageGameSettings = function (gameId) {
-    $("#pageGameSettings_Title").html("Game #" + this.Games[gameId].Id);
-
-    $("#pageGameSettings_Id").val(this.Games[gameId].Id);
-    $("#pageGameSettings_Name").val(this.Games[gameId].Name);
-
-
-    var t1p1 = t1p2 = t2p1 = t2p2 = -1;
-
-    // we check this to make sure the PlayerId is valid (aka exists in the Players list)
-    try { t1p1 = this.Players[this.Games[gameId].Team1.Player1Id].Id; } catch (error) { }
-    try { t1p2 = this.Players[this.Games[gameId].Team1.Player2Id].Id; } catch (error) { }
-    try { t2p1 = this.Players[this.Games[gameId].Team2.Player1Id].Id; } catch (error) { }
-    try { t2p2 = this.Players[this.Games[gameId].Team2.Player2Id].Id; } catch (error) { }
-
-    $("#pageGameSettings_t1p1").val(t1p1);
-    $("#pageGameSettings_t1p2").val(t1p2);
-    $("#pageGameSettings_t2p1").val(t2p1);
-    $("#pageGameSettings_t2p2").val(t2p2);
-
-    try { $("#pageGameSettings_t1p1").selectmenu('refresh'); } catch (error) { }
-    try { $("#pageGameSettings_t1p2").selectmenu('refresh'); } catch (error) { }
-    try { $("#pageGameSettings_t2p1").selectmenu('refresh'); } catch (error) { }
-    try { $("#pageGameSettings_t2p2").selectmenu('refresh'); } catch (error) { }
-
-    $.mobile.changePage("#pageGameSettings", "fade", false, true);
-}
-Foosball.System.prototype.gotoPageGameDetails = function (gameId) {
-    $("#pageGameDetails_Title").html(this.getGameName(gameId));
-
-    $("#pageGameDetails_Id").val(this.Games[gameId].Id);
-    $("#pageGameDetails_Name").val(this.Games[gameId].Name);
-    $("#pageGameDetails_Scores").html(Foosball.DOMHelper.getScoresHtml(gameId));
-
-
-    var t1p1Id = t1p2Id = t2p1Id = t2p2Id = -1;
-    var t1p1Name = t1p2Name = t2p1Name = t2p2Name = "??";
-    try { t1p1Id = this.Players[this.Games[gameId].Team1.Player1Id].Id; t1p1Name = this.Players[this.Games[gameId].Team1.Player1Id].Name; } catch (error) { }
-    try { t1p2Id = this.Players[this.Games[gameId].Team1.Player2Id].Id; t1p2Name = this.Players[this.Games[gameId].Team1.Player2Id].Name; } catch (error) { }
-    try { t2p1Id = this.Players[this.Games[gameId].Team2.Player1Id].Id; t2p1Name = this.Players[this.Games[gameId].Team2.Player1Id].Name; } catch (error) { }
-    try { t2p2Id = this.Players[this.Games[gameId].Team2.Player2Id].Id; t2p2Name = this.Players[this.Games[gameId].Team2.Player2Id].Name; } catch (error) { }
-
-    $("#pageGameDetails_t1p1Id").val(t1p1Id);
-    $("#pageGameDetails_t1p2Id").val(t1p2Id);
-    $("#pageGameDetails_t2p1Id").val(t2p1Id);
-    $("#pageGameDetails_t2p2Id").val(t2p2Id);
-
-    $("#pageGameDetails_t1p1Name").html(t1p1Name);
-    $("#pageGameDetails_t1p2Name").html(t1p2Name);
-    $("#pageGameDetails_t2p1Name").html(t2p1Name);
-    $("#pageGameDetails_t2p2Name").html(t2p2Name);
-
-    $("#pageGameDetails_t1p1Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team1.Player1Id));
-    $("#pageGameDetails_t1p2Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team1.Player2Id));
-    $("#pageGameDetails_t2p1Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team2.Player1Id));
-    $("#pageGameDetails_t2p2Points").html(this.getPointsByPlayer(gameId, this.Games[gameId].Team2.Player2Id));
-
-
-    $.mobile.changePage("#pageGameDetails", "fade", false, true);
 }
 Foosball.System.prototype.addPlayer = function () {
     var newId = this.Players.length;
@@ -549,11 +551,12 @@ $(document).bind("mobileinit", function(){
 
 
 // start up code
-var foosball;
-$(document).ready(function() {
+var system;
+$(document).ready(function () {
     system = new Foosball.System();
     system.resumeState();
-    
+
+    Foosball.DOMHelper.initialize();
 });
 </script>
 </html>
