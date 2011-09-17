@@ -243,18 +243,6 @@ Foosball.DOMHelper.initialize = function (name) {
 Foosball.DOMHelper.gotoPageSystemSettings = function () {
     $.mobile.changePage("#pageSystemSettings", "fade", false, true);
 }
-Foosball.DOMHelper.gotoPagePlayerList = function () {
-    Foosball.DOMHelper.refreshPlayerList();
-    $.mobile.changePage("#pagePlayerList", "fade", false, true);
-}
-Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId) {
-    $("#pagePlayerSettings_Title").html("Player #" + system.Players[playerId].Id);
-
-    $("#pagePlayerSettings_Id").val(system.Players[playerId].Id);
-    $("#pagePlayerSettings_Name").val(system.Players[playerId].Name);
-
-    $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
-}
 Foosball.DOMHelper.gotoPageGameList = function () {
     Foosball.DOMHelper.refreshGameList();
     $.mobile.changePage("#pageGameList", "fade", false, true);
@@ -319,7 +307,32 @@ Foosball.DOMHelper.gotoPageGameDetails = function (gameId) {
 
     $.mobile.changePage("#pageGameDetails", "fade", false, true);
 }
+Foosball.DOMHelper.gotoPagePlayerList = function () {
+    Foosball.DOMHelper.refreshPlayerList();
+    $.mobile.changePage("#pagePlayerList", "fade", false, true);
+}
+Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId) {
+    $("#pagePlayerSettings_Title").html("Player #" + system.Players[playerId].Id);
 
+    $("#pagePlayerSettings_Id").val(system.Players[playerId].Id);
+    $("#pagePlayerSettings_Name").val(system.Players[playerId].Name);
+
+    $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
+}
+
+Foosball.DOMHelper.refreshGameList = function () {
+    $("#gameList").html('');
+    for (var ii in system.Games) {
+        var scores = system.getScores(system.Games[ii].Id);
+        $("#gameList").append(
+            "<li><a href='#pageGameDetails'" +
+                " onclick='Foosball.DOMHelper.gotoPageGameDetails(" + system.Games[ii].Id + "); return false;'>" +
+                scores[0] + "-" + scores[1] + " " + system.getGameName(ii) +
+            "</a></li>"
+        );
+    }
+    try { $("#gameList").listview('refresh'); } catch (error) { }
+}
 Foosball.DOMHelper.refreshPlayerList = function () {
     $("#playerList").html('');
     for (var ii in system.Players) {
@@ -342,31 +355,14 @@ Foosball.DOMHelper.refreshPlayerList = function () {
     $("#pageGameSettings_t2p1").html(playerOptions);
     $("#pageGameSettings_t2p2").html(playerOptions);
 }
-Foosball.DOMHelper.refreshGameList = function () {
-    $("#gameList").html('');
-    for (var ii in system.Games) {
-        var scores = system.getScores(system.Games[ii].Id);
-        $("#gameList").append(
-            "<li><a href='#pageGameDetails'" +
-                " onclick='Foosball.DOMHelper.gotoPageGameDetails(" + system.Games[ii].Id + "); return false;'>" +
-                scores[0] + "-" + scores[1] + " " + system.getGameName(ii) +
-            "</a></li>"
-        );
-    }
-    try { $("#gameList").listview('refresh'); } catch (error) { }
-}
 
-Foosball.DOMHelper.addPlayer = function () {
-    var newId = system.addPlayer();
-    Foosball.DOMHelper.gotoPagePlayerSettings(newId);
-}
 Foosball.DOMHelper.addGame = function () {
     var newId = system.addGame();
     Foosball.DOMHelper.gotoPageGameSettings(newId);
 }
-Foosball.DOMHelper.updatePlayer = function (playerId) {
-    system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
-    Foosball.DOMHelper.gotoPagePlayerList();
+Foosball.DOMHelper.addPlayer = function () {
+    var newId = system.addPlayer();
+    Foosball.DOMHelper.gotoPagePlayerSettings(newId);
 }
 Foosball.DOMHelper.updateGame = function (gameId) {
     system.updateGame(gameId,
@@ -377,6 +373,10 @@ Foosball.DOMHelper.updateGame = function (gameId) {
         $('#pageGameSettings_t2p2').val()
     );
     Foosball.DOMHelper.gotoPageGameDetails(gameId);
+}
+Foosball.DOMHelper.updatePlayer = function (playerId) {
+    system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
+    Foosball.DOMHelper.gotoPagePlayerList();
 }
 Foosball.DOMHelper.addPoint = function (position) {
     system.addPoint($('#pageGameDetails_Id').val(), $('#pageGameDetails_' + position + 'Id').val());
@@ -416,17 +416,6 @@ Foosball.System.prototype.resumeState = function () {
 Foosball.System.prototype.saveState = function () {
     localStorage.setItem(this.__namespace + "-" + this.__name, JSON.stringify(this));
 }
-Foosball.System.prototype.addPlayer = function () {
-    var newId = this.Players.length;
-    var newItem = new Foosball.Player();
-    newItem.Id = newId;
-    newItem.Name = "";
-    
-    this.Players[newId] = newItem;
-    this.saveState();
-    
-    return newId;
-}
 Foosball.System.prototype.addGame = function () {
     // add a game to the history
     var newId = this.Games.length;
@@ -442,6 +431,17 @@ Foosball.System.prototype.addGame = function () {
 
     return newId;
 }
+Foosball.System.prototype.addPlayer = function () {
+    var newId = this.Players.length;
+    var newItem = new Foosball.Player();
+    newItem.Id = newId;
+    newItem.Name = "";
+
+    this.Players[newId] = newItem;
+    this.saveState();
+
+    return newId;
+}
 Foosball.System.prototype.addPoint = function (gameId, playerId) {
     var newPoint = new Foosball.Point();
     newPoint.PlayerId = playerId;
@@ -450,17 +450,17 @@ Foosball.System.prototype.addPoint = function (gameId, playerId) {
     this.Games[gameId].Points.push(newPoint);
     this.saveState();
 }
-Foosball.System.prototype.updatePlayer = function (playerId, name) {
-    this.Players[playerId].Name = name;
-
-    this.saveState();
-}
 Foosball.System.prototype.updateGame = function (gameId, name, t1p1, t1p2, t2p1, t2p2) {
     this.Games[gameId].Name = name;
     this.Games[gameId].Team1.Player1Id = t1p1;
     this.Games[gameId].Team1.Player2Id = t1p2;
     this.Games[gameId].Team2.Player1Id = t2p1;
     this.Games[gameId].Team2.Player2Id = t2p2;
+
+    this.saveState();
+}
+Foosball.System.prototype.updatePlayer = function (playerId, name) {
+    this.Players[playerId].Name = name;
 
     this.saveState();
 }
