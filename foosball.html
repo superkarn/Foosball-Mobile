@@ -56,6 +56,22 @@
 <body>
 
 
+<div id="pageSystemSettings" data-role="page"> 
+    <div data-role="header" data-position="inline">
+        <h1>System Settings</h1>
+    </div>
+    
+    <div data-role="content">
+        <a href="#" data-role="button" data-icon="grid" onclick="system.gotoPagePlayerList();">Players</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
+    </div>
+    
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#" data-role="button" data-icon="grid" onclick="system.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
+        <a href="#" data-role="button" data-icon="gear" onclick="system.gotoPageSystemSettings();" class="ui-btn-active ui-state-persist">System</a>
+    </div>
+</div>
 
 <div id="pageGameList" data-role="page"> 
     <div data-role="header" data-position="inline">
@@ -67,10 +83,9 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" onclick="system.gotoPageGameList();" class="ui-btn-active ui-state-persist">Games</a>
-        <a href="#" data-role="button" onclick="system.gotoPagePlayerList();">Players</a>
+        <a href="#" data-role="button" data-icon="grid" onclick="system.gotoPageGameList();" class="ui-btn-active ui-state-persist">Games</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
+        <a href="#" data-role="button" data-icon="gear" onclick="system.gotoPageSystemSettings();">System</a>
     </div>
 </div>
 
@@ -84,10 +99,7 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
-        <a href="#" data-role="button" onclick="system.gotoPagePlayerList();" class="ui-btn-active ui-state-persist">Players</a>
-        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPageSystemSettings();">Back</a>
     </div>
 </div>
 
@@ -109,8 +121,7 @@
         </fieldset>
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
-        <a href="#" data-role="button" onclick="system.gotoPagePlayerList();">Players</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPagePlayerList();">Back</a>
     </div>
 </div>
 
@@ -142,8 +153,7 @@
         </fieldset>
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
-        <a href="#" data-role="button" onclick="system.gotoPageGameDetails($('#pageGameSettings_Id').val());">Details</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPageGameDetails($('#pageGameSettings_Id').val());">Back</a>
     </div>
 </div>
 
@@ -203,7 +213,7 @@
 
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" onclick="system.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="system.gotoPageGameList();">Back</a>
         <a href="#" data-role="button" onclick="system.gotoPageGameSettings($('#pageGameDetails_Id').val());">Settings</a>
     </div>
 </div>
@@ -235,7 +245,7 @@ Foosball.DOMHelper.addGame = function () {
 }
 Foosball.DOMHelper.updatePlayer = function (playerId) {
     system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
-    $.mobile.changePage("#pagePlayerList");
+    system.gotoPagePlayerList();
 }
 Foosball.DOMHelper.updateGame = function (gameId) {
     system.updateGame(gameId,
@@ -324,6 +334,9 @@ Foosball.System.prototype.refreshGameList = function () {
         );
     }
     try { $("#gameList").listview('refresh'); } catch (error) { }
+}
+Foosball.System.prototype.gotoPageSystemSettings = function () {
+    $.mobile.changePage("#pageSystemSettings", "fade", false, true);
 }
 Foosball.System.prototype.gotoPagePlayerList = function () {
     this.refreshPlayerList();
