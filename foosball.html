@@ -91,38 +91,6 @@
     </div>
 </div>
 
-<div id="pageGameSettings" data-role="page">
-    <div data-role="header" data-position="inline">
-        <h1 id="pageGameSettings_Title"></h1>
-    </div>
-    <div data-role="content">
-        <input type="hidden" name="pageGameSettings_Id" id="pageGameSettings_Id" />
-        <!--
-        <div data-role="fieldcontain">
-            <label for="pageGameSettings_Name">Game Name</label>
-            <input type="text" name="pageGameSettings_Name" id="pageGameSettings_Name" />
-        </div>
-        -->
-        <div data-role="fieldcontain">
-            <label>Black</label><br />
-            <select name="pageGameSettings_t1p1" id="pageGameSettings_t1p1"></select>
-            <select name="pageGameSettings_t1p2" id="pageGameSettings_t1p2"></select>
-        </div>	
-        <div data-role="fieldcontain">
-            <label>White</label><br />
-            <select name="pageGameSettings_t2p1" id="pageGameSettings_t2p1"></select>
-            <select name="pageGameSettings_t2p2" id="pageGameSettings_t2p2"></select>
-        </div>
-        <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pageGameList');" /></div>
-            <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updateGame($('#pageGameSettings_Id').val());" /></div>	   
-        </fieldset>
-    </div>
-    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameDetails($('#pageGameSettings_Id').val());">Back</a>
-    </div>
-</div>
-
 <div id="pageGameDetails" data-role="page">
     <div data-role="header">
         <h1 id="pageGameDetails_Title"></h1>
@@ -178,8 +146,40 @@
 
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameList();">Back</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameList(true);">Back</a>
         <a href="#" data-role="button" onclick="Foosball.DOMHelper.gotoPageGameSettings($('#pageGameDetails_Id').val());">Settings</a>
+    </div>
+</div>
+
+<div id="pageGameSettings" data-role="page">
+    <div data-role="header" data-position="inline">
+        <h1 id="pageGameSettings_Title"></h1>
+    </div>
+    <div data-role="content">
+        <input type="hidden" name="pageGameSettings_Id" id="pageGameSettings_Id" />
+        <!--
+        <div data-role="fieldcontain">
+            <label for="pageGameSettings_Name">Game Name</label>
+            <input type="text" name="pageGameSettings_Name" id="pageGameSettings_Name" />
+        </div>
+        -->
+        <div data-role="fieldcontain">
+            <label>Black</label><br />
+            <select name="pageGameSettings_t1p1" id="pageGameSettings_t1p1"></select>
+            <select name="pageGameSettings_t1p2" id="pageGameSettings_t1p2"></select>
+        </div>	
+        <div data-role="fieldcontain">
+            <label>White</label><br />
+            <select name="pageGameSettings_t2p1" id="pageGameSettings_t2p1"></select>
+            <select name="pageGameSettings_t2p2" id="pageGameSettings_t2p2"></select>
+        </div>
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><input type="button" value="Cancel" onclick="Foosball.DOMHelper.gotoPageGameDetails($('#pageGameSettings_Id').val(), true);" /></div>
+            <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updateGame($('#pageGameSettings_Id').val());" /></div>	   
+        </fieldset>
+    </div>
+    <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameDetails($('#pageGameSettings_Id').val(), true);">Back</a>
     </div>
 </div>
 
@@ -195,7 +195,7 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageSystemSettings();">Back</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageSystemSettings(true);">Back</a>
     </div>
 </div>
 
@@ -210,12 +210,12 @@
             <input type="text" name="pagePlayerSettings_Name" id="pagePlayerSettings_Name" />
         </div>	
         <fieldset class="ui-grid-a">
-            <div class="ui-block-a"><input type="button" value="Cancel" onclick="$.mobile.changePage('#pagePlayerList');" /></div>
+            <div class="ui-block-a"><input type="button" value="Cancel" onclick="Foosball.DOMHelper.gotoPagePlayerList(true);" /></div>
             <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updatePlayer($('#pagePlayerSettings_Id').val());" /></div>	   
         </fieldset>
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Back</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPagePlayerList(true);">Back</a>
     </div>
 </div>
 
@@ -240,14 +240,20 @@ Foosball.DOMHelper.initialize = function (name) {
     Foosball.DOMHelper.gotoPageGameList();
 }
 
-Foosball.DOMHelper.gotoPageSystemSettings = function () {
-    $.mobile.changePage("#pageSystemSettings", "fade", false, true);
+Foosball.DOMHelper.gotoPageSystemSettings = function (transitionReverse) {
+    $.mobile.changePage("#pageSystemSettings", {
+        transition: "slide",
+        reverse: transitionReverse || false
+    });
 }
-Foosball.DOMHelper.gotoPageGameList = function () {
+Foosball.DOMHelper.gotoPageGameList = function (transitionReverse) {
     Foosball.DOMHelper.refreshGameList();
-    $.mobile.changePage("#pageGameList", "fade", false, true);
+    $.mobile.changePage("#pageGameList", {
+        transition: "slide",
+        reverse: transitionReverse || false
+    });
 }
-Foosball.DOMHelper.gotoPageGameSettings = function (gameId) {
+Foosball.DOMHelper.gotoPageGameSettings = function (gameId, transitionReverse) {
     $("#pageGameSettings_Title").html("Game #" + system.Games[gameId].Id);
 
     $("#pageGameSettings_Id").val(system.Games[gameId].Id);
@@ -272,14 +278,17 @@ Foosball.DOMHelper.gotoPageGameSettings = function (gameId) {
     try { $("#pageGameSettings_t2p1").selectmenu('refresh'); } catch (error) { }
     try { $("#pageGameSettings_t2p2").selectmenu('refresh'); } catch (error) { }
 
-    $.mobile.changePage("#pageGameSettings", "fade", false, true);
+    $.mobile.changePage("#pageGameSettings", {
+        transition: "slide",
+        reverse: transitionReverse || false
+    });
 }
-Foosball.DOMHelper.gotoPageGameDetails = function (gameId) {
+Foosball.DOMHelper.gotoPageGameDetails = function (gameId, transitionReverse) {
     $("#pageGameDetails_Title").html(system.getGameName(gameId));
 
     $("#pageGameDetails_Id").val(system.Games[gameId].Id);
     $("#pageGameDetails_Name").val(system.Games[gameId].Name);
-    $("#pageGameDetails_Scores").html(Foosball.DOMHelper.getScoresHtml(gameId));
+    $("#pageGameDetails_Scores").html(system.getScoresHtml(gameId));
 
 
     var t1p1Id = t1p2Id = t2p1Id = t2p2Id = -1;
@@ -305,19 +314,28 @@ Foosball.DOMHelper.gotoPageGameDetails = function (gameId) {
     $("#pageGameDetails_t2p2Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team2.Player2Id));
 
 
-    $.mobile.changePage("#pageGameDetails", "fade", false, true);
+    $.mobile.changePage("#pageGameDetails", {
+        transition: "slide",
+        reverse: transitionReverse || false
+    });
 }
-Foosball.DOMHelper.gotoPagePlayerList = function () {
+Foosball.DOMHelper.gotoPagePlayerList = function (transitionReverse) {
     Foosball.DOMHelper.refreshPlayerList();
-    $.mobile.changePage("#pagePlayerList", "fade", false, true);
+    $.mobile.changePage("#pagePlayerList", {
+        transition: "slide",
+        reverse: transitionReverse || false
+    });
 }
-Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId) {
+Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId, transitionReverse) {
     $("#pagePlayerSettings_Title").html("Player #" + system.Players[playerId].Id);
 
     $("#pagePlayerSettings_Id").val(system.Players[playerId].Id);
     $("#pagePlayerSettings_Name").val(system.Players[playerId].Name);
 
-    $.mobile.changePage("#pagePlayerSettings", "fade", false, true);
+    $.mobile.changePage("#pagePlayerSettings", {
+        transition: "slide",
+        reverse: transitionReverse || false
+    });
 }
 
 Foosball.DOMHelper.refreshGameList = function () {
@@ -372,29 +390,17 @@ Foosball.DOMHelper.updateGame = function (gameId) {
         $('#pageGameSettings_t2p1').val(),
         $('#pageGameSettings_t2p2').val()
     );
-    Foosball.DOMHelper.gotoPageGameDetails(gameId);
+    Foosball.DOMHelper.gotoPageGameDetails(gameId, true);
 }
 Foosball.DOMHelper.updatePlayer = function (playerId) {
     system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
-    Foosball.DOMHelper.gotoPagePlayerList();
+    Foosball.DOMHelper.gotoPagePlayerList(true);
 }
 Foosball.DOMHelper.addPoint = function (position) {
     system.addPoint($('#pageGameDetails_Id').val(), $('#pageGameDetails_' + position + 'Id').val());
 
     $('#pageGameDetails_' + position + 'Points').html(parseInt($('#pageGameDetails_' + position + 'Points').html()) + 1);
     $('#pageGameDetails_Scores').html(Foosball.DOMHelper.getScoresHtml($('#pageGameDetails_Id').val()));
-}
-Foosball.DOMHelper.getScoresHtml = function (gameId) {
-    var result = "";
-    var scores = system.getScores(gameId);
-    if (scores[0] > scores[1]) {
-        result = "<span class='winningScore'>" + scores[0] + "</span> - <span class='losingScore'>" + scores[1] + "</span>";
-    } else if (scores[0] < scores[1]) {
-        result = "<span class='losingScore'>" + scores[0] + "</span> - <span class='winningScore'>" + scores[1] + "</span>";
-    } else {
-        result = "<span>" + scores[0] + "</span> - <span>" + scores[1] + "</span>";
-    }
-    return result;
 }
 
 
@@ -500,6 +506,18 @@ Foosball.System.prototype.getScores = function (gameId) {
 
     result[0] = team1Points;
     result[1] = team2Points;
+    return result;
+}
+Foosball.System.prototype.getScoresHtml = function (gameId) {
+    var result = "";
+    var scores = this.getScores(gameId);
+    if (scores[0] > scores[1]) {
+        result = "<span class='winningScore'>" + scores[0] + "</span> - <span class='losingScore'>" + scores[1] + "</span>";
+    } else if (scores[0] < scores[1]) {
+        result = "<span class='losingScore'>" + scores[0] + "</span> - <span class='winningScore'>" + scores[1] + "</span>";
+    } else {
+        result = "<span>" + scores[0] + "</span> - <span>" + scores[1] + "</span>";
+    }
     return result;
 }
 Foosball.System.prototype.getPointsByPlayer = function (gameId, playerId) {
