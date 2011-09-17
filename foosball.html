@@ -51,6 +51,11 @@
             height:100px;
             vertical-align:middle;
         }
+        
+        .deleteAllData
+        {
+            color:red;
+        }
     </style>
 </head>
 <body>
@@ -62,8 +67,24 @@
     </div>
     
     <div data-role="content">
-        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Players</a>
-        <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
+
+        <fieldset class="ui-grid-a">
+            <div class="ui-block-a"><a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Players</a></div>
+            <div class="ui-block-b"><a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a></div>	   
+        </fieldset>
+        
+        <br /><br /><br />
+        
+        <div><!-- making this button small on purpose -->
+            <a href="index.html" data-ajax="false" data-role="button" data-icon="delete" data-iconpos="notext" data-theme="e" 
+                onclick="Foosball.DOMHelper.deleteSystem(); return false;">
+                Delete Data
+            </a> 
+            <span class="deleteAllData">DELETE ALL DATA</span>
+        </div>	   
+
+        
+        
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
@@ -402,7 +423,15 @@ Foosball.DOMHelper.addPoint = function (position) {
     $('#pageGameDetails_' + position + 'Points').html(parseInt($('#pageGameDetails_' + position + 'Points').html()) + 1);
     $('#pageGameDetails_Scores').html(Foosball.DOMHelper.getScoresHtml($('#pageGameDetails_Id').val()));
 }
+Foosball.DOMHelper.deleteSystem = function () {
+    if (confirm("Are you sure you want to delete all the data?")) {
+        system.clearState();
+        Foosball.DOMHelper.refreshGameList();
+        Foosball.DOMHelper.refreshPlayerList();
 
+        alert("All game data has been deleted.");
+    }
+}
 
 Foosball.System = function () {
     this.__namespace = "Foosball";
@@ -422,6 +451,12 @@ Foosball.System.prototype.resumeState = function () {
 Foosball.System.prototype.saveState = function () {
     localStorage.setItem(this.__namespace + "-" + this.__name, JSON.stringify(this));
 }
+Foosball.System.prototype.clearState = function () {
+    localStorage.clear();
+    this.Players = new Array();
+    this.Games = new Array();
+}
+
 Foosball.System.prototype.addGame = function () {
     // add a game to the history
     var newId = this.Games.length;
