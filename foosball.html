@@ -507,7 +507,7 @@ Foosball.System.prototype.updatePlayer = function (playerId, name) {
 }
 
 Foosball.System.prototype.getGameName = function (gameId) {
-    var result = this.Games[gameId].Name;
+    var result = this.Games[gameId].Name || "";
     if ((result + "") == "") {
         var t1p1 = t1p2 = t2p1 = t2p2 = "??";
         try { t1p1 = this.Players[this.Games[gameId].Team1.Player1Id].Name; } catch (error) { }
@@ -577,7 +577,7 @@ Foosball.System.prototype.sortByName = function (a, b) {
 }
 Foosball.System.prototype.sortByDateDesc = function (a, b) {
     try {
-        if (a.NameStartDate < b.StartDate) return 1
+        if (a.StartDate < b.StartDate) return 1
         if (a.StartDate > b.StartDate) return -1
     } catch (error) { alert(error); }
 
