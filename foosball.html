@@ -358,27 +358,32 @@ Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId, transitionRevers
 }
 
 Foosball.DOMHelper.refreshGameList = function () {
-    system.Games.sort(system.sortByDateDesc);
+    // copy to temp list so we don't sort the original list
+    var list = system.Games;
+    list.sort(system.sortByDateDesc);
     $("#gameList").html('');
-    for (var ii in system.Games) {
-        var scores = system.getScores(system.Games[ii].Id);
+    for (var ii in list) {
+        var scores = system.getScores(list[ii].Id);
         $("#gameList").append(
-            "<li><a href='#pageGameDetails'" +
-                " onclick='Foosball.DOMHelper.gotoPageGameDetails(" + system.Games[ii].Id + "); return false;'>" +
-                scores[0] + "-" + scores[1] + " " + system.getGameName(ii) +
+            "<li><a href='#'" +
+                " onclick='Foosball.DOMHelper.gotoPageGameDetails(" + list[ii].Id + "); return false;'>" +
+                scores[0] + "-" + scores[1] + " " + system.getGameName(list[ii].Id) +
             "</a></li>"
         );
     }
     try { $("#gameList").listview('refresh'); } catch (error) { }
 }
 Foosball.DOMHelper.refreshPlayerList = function () {
-    system.Players.sort(system.sortByName);
+    // copy to temp list so we don't sort the original list
+    var list = system.Players;
+    list.sort(system.sortByName);
+
     $("#playerList").html('');
-    for (var ii in system.Players) {
+    for (var ii in list) {
         $("#playerList").append(
-            "<li><a href='#pagePlayerSettings'" +
-            " onclick='Foosball.DOMHelper.gotoPagePlayerSettings(" + system.Players[ii].Id + "); return false;'>" +
-            system.Players[ii].Id + ": " + system.Players[ii].Name + "</a></li>"
+            "<li><a href='#'" +
+            " onclick='Foosball.DOMHelper.gotoPagePlayerSettings(" + list[ii].Id + "); return false;'>" +
+            list[ii].Id + ": " + list[ii].Name + "</a></li>"
         );
     }
     try { $("#playerList").listview('refresh'); } catch (error) { }
@@ -386,8 +391,8 @@ Foosball.DOMHelper.refreshPlayerList = function () {
 
     // also refresh the player list in the GameSettings page
     var playerOptions = "<option value='-1'>Select Player</option>";
-    for (var ii in system.Players) {
-        playerOptions += "<option value='" + system.Players[ii].Id + "'>" + system.Players[ii].Name + "</option>";
+    for (var ii in list) {
+        playerOptions += "<option value='" + list[ii].Id + "'>" + list[ii].Name + "</option>";
     }
     $("#pageGameSettings_t1p1").html(playerOptions);
     $("#pageGameSettings_t1p2").html(playerOptions);
@@ -421,7 +426,7 @@ Foosball.DOMHelper.addPoint = function (position) {
     system.addPoint($('#pageGameDetails_Id').val(), $('#pageGameDetails_' + position + 'Id').val());
 
     $('#pageGameDetails_' + position + 'Points').html(parseInt($('#pageGameDetails_' + position + 'Points').html()) + 1);
-    $('#pageGameDetails_Scores').html(Foosball.DOMHelper.getScoresHtml($('#pageGameDetails_Id').val()));
+    $('#pageGameDetails_Scores').html(system.getScoresHtml($('#pageGameDetails_Id').val()));
 }
 Foosball.DOMHelper.deleteSystem = function () {
     if (confirm("Are you sure you want to delete all the data?")) {
