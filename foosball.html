@@ -327,10 +327,10 @@ Foosball.DOMHelper.gotoPageGameDetails = function (gameId, transitionReverse) {
     $("#pageGameDetails_t2p1Name").html(t2p1Name);
     $("#pageGameDetails_t2p2Name").html(t2p2Name);
 
-    $("#pageGameDetails_t1p1Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team1.Player1Id));
-    $("#pageGameDetails_t1p2Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team1.Player2Id));
-    $("#pageGameDetails_t2p1Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team2.Player1Id));
-    $("#pageGameDetails_t2p2Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team2.Player2Id));
+    $("#pageGameDetails_t1p1Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team1.Player1Id, 1));
+    $("#pageGameDetails_t1p2Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team1.Player2Id, 2));
+    $("#pageGameDetails_t2p1Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team2.Player1Id, 1));
+    $("#pageGameDetails_t2p2Points").html(system.getPointsByPlayer(gameId, system.Games[gameId].Team2.Player2Id, 2));
 
 
     $.mobile.changePage("#pageGameDetails", {
@@ -423,11 +423,18 @@ Foosball.DOMHelper.updatePlayer = function (playerId) {
     system.updatePlayer(playerId, $('#pagePlayerSettings_Name').val());
     Foosball.DOMHelper.gotoPagePlayerList(true);
 }
-Foosball.DOMHelper.addPoint = function (position) {
-    system.addPoint($('#pageGameDetails_Id').val(), $('#pageGameDetails_' + position + 'Id').val());
+Foosball.DOMHelper.addPoint = function (elementId) {
+    if ($('#pageGameDetails_' + elementId + 'Id').val() >= 0) {
+        var position = 1;
+        if (elementId == "t1p2" || elementId == "t2p2") position = 2;
 
-    $('#pageGameDetails_' + position + 'Points').html(parseInt($('#pageGameDetails_' + position + 'Points').html()) + 1);
-    $('#pageGameDetails_Scores').html(system.getScoresHtml($('#pageGameDetails_Id').val()));
+        system.addPoint($('#pageGameDetails_Id').val(), $('#pageGameDetails_' + elementId + 'Id').val(), position);
+
+        $('#pageGameDetails_' + elementId + 'Points').html(parseInt($('#pageGameDetails_' + elementId + 'Points').html()) + 1);
+        $('#pageGameDetails_Scores').html(system.getScoresHtml($('#pageGameDetails_Id').val()));
+    } else {
+        throw "Invalid player.";
+    }
 }
 Foosball.DOMHelper.deleteSystem = function () {
     if (confirm("Are you sure you want to delete all the data?")) {
@@ -438,6 +445,8 @@ Foosball.DOMHelper.deleteSystem = function () {
         alert("All game data has been deleted.");
     }
 }
+
+//////////////////////////////////////////////////////////////////////
 
 Foosball.System = function () {
     this.__namespace = "Foosball";
@@ -498,9 +507,10 @@ Foosball.System.prototype.addPlayer = function () {
 
     return newId;
 }
-Foosball.System.prototype.addPoint = function (gameId, playerId) {
+Foosball.System.prototype.addPoint = function (gameId, playerId, positionId) {
     var newPoint = new Foosball.Point();
     newPoint.PlayerId = playerId;
+    newPoint.PositionId = positionId;
     newPoint.CreateDate = new Date();
 
     this.Games[gameId].Points.push(newPoint);
@@ -569,11 +579,12 @@ Foosball.System.prototype.getScoresHtml = function (gameId) {
     }
     return result;
 }
-Foosball.System.prototype.getPointsByPlayer = function (gameId, playerId) {
+Foosball.System.prototype.getPointsByPlayer = function (gameId, playerId, positionId) {
     var result = 0;
 
     for (var ii in this.Games[gameId].Points) {
-        if (this.Games[gameId].Points[ii].PlayerId == playerId) {
+        if (this.Games[gameId].Points[ii].PlayerId == playerId &&
+            this.Games[gameId].Points[ii].PositionId == positionId) {
             result++;
         }
     }
@@ -602,6 +613,7 @@ Foosball.System.prototype.sortByDateDesc = function (a, b) {
     return 0
 }
 
+//////////////////////////////////////////////////////////////////////
 
 Foosball.Player = function (o) {
     this.__class = "Foosball.Player";
