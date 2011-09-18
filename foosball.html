@@ -359,8 +359,9 @@ Foosball.DOMHelper.gotoPagePlayerSettings = function (playerId, transitionRevers
 
 Foosball.DOMHelper.refreshGameList = function () {
     // copy to temp list so we don't sort the original list
-    var list = system.Games;
+    var list = system.Games.slice();
     list.sort(system.sortByDateDesc);
+
     $("#gameList").html('');
     for (var ii in list) {
         var scores = system.getScores(list[ii].Id);
@@ -375,8 +376,8 @@ Foosball.DOMHelper.refreshGameList = function () {
 }
 Foosball.DOMHelper.refreshPlayerList = function () {
     // copy to temp list so we don't sort the original list
-    var list = system.Players;
-    list.sort(system.sortByName);
+    var list = system.Players.slice();
+    list.sort(system.sortByString);
 
     $("#playerList").html('');
     for (var ii in list) {
@@ -571,10 +572,12 @@ Foosball.System.prototype.getPointsByPlayer = function (gameId, playerId) {
     return result;
 }
 
-Foosball.System.prototype.sortByName = function (a, b) {
+Foosball.System.prototype.sortByString = function (a, b) {
     try {
-        if (a.Name < b.Name) return -1
-        if (a.Name > b.Name) return 1
+        var aName = a.Name.toLowerCase();
+        var bName = b.Name.toLowerCase();
+        if (aName < bName) return -1
+        if (aName > bName) return 1
     } catch (error) { alert(error); }
 
     // default is they're the same
