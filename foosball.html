@@ -10,9 +10,16 @@
 
     <title>Foosball</title>
     
+    <!-- "stable"
     <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.css" />
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.3.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b3/jquery.mobile-1.0b3.min.js"></script>
+    -->
+
+    <!-- "latest" this fixes the issue with <select> themes -->
+    <link href="http://code.jquery.com/mobile/latest/jquery.mobile.min.css" rel="stylesheet" type="text/css" />
+    <script src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+    <script src="http://code.jquery.com/mobile/latest/jquery.mobile.min.js"></script>
     
     <style type="text/css">
         .ui-header .ui-title, 
@@ -70,14 +77,13 @@
 
         <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPagePlayerList();">Players</a>
         
-        <br /><br /><br />
+        <br /><br /><br /><br /><br /><br />
         
         <div><!-- making this button small on purpose -->
-            <a href="index.html" data-ajax="false" data-role="button" data-icon="delete" data-iconpos="notext" data-theme="e" 
+            <a href="index.html" data-ajax="false" data-role="button" data-icon="delete" data-theme="e" 
                 onclick="Foosball.DOMHelper.deleteSystem(); return false;">
-                Delete Data
+                <span class="deleteAllData">DELETE ALL DATA</span>
             </a> 
-            <span class="deleteAllData">DELETE ALL DATA</span>
         </div>	   
 
         
@@ -181,16 +187,12 @@
             <input type="text" name="pageGameSettings_Name" id="pageGameSettings_Name" />
         </div>
         -->
-        <div data-role="fieldcontain">
-            <label>Black</label><br />
-            <select name="pageGameSettings_t1p1" id="pageGameSettings_t1p1"></select>
-            <select name="pageGameSettings_t1p2" id="pageGameSettings_t1p2"></select>
-        </div>	
-        <div data-role="fieldcontain">
-            <label>White</label><br />
-            <select name="pageGameSettings_t2p1" id="pageGameSettings_t2p1"></select>
-            <select name="pageGameSettings_t2p2" id="pageGameSettings_t2p2"></select>
-        </div>
+
+        <select name="pageGameSettings_t1p1" id="pageGameSettings_t1p1" data-theme="a"></select>
+        <select name="pageGameSettings_t1p2" id="pageGameSettings_t1p2" data-theme="a"></select>
+        <select name="pageGameSettings_t2p1" id="pageGameSettings_t2p1" data-theme="c"></select>
+        <select name="pageGameSettings_t2p2" id="pageGameSettings_t2p2" data-theme="c"></select>
+
         <fieldset class="ui-grid-a">
             <div class="ui-block-a"><input type="button" value="Cancel" onclick="Foosball.DOMHelper.gotoPageGameDetails($('#pageGameSettings_Id').val(), true);" /></div>
             <div class="ui-block-b"><input type="button" data-theme="b" value="Update" onclick="Foosball.DOMHelper.updateGame($('#pageGameSettings_Id').val());" /></div>	   
@@ -692,11 +694,8 @@ Foosball.Point = function (o) {
 
 
 
-// jquery mobile settings 
-$(document).bind("mobileinit", function(){
-    $.mobile.defaultPageTransition = "fade";
-});
-
+// this prevents the user from scrolling the page
+document.ontouchmove = function (e) { e.preventDefault(); }
 
 // start up code
 var system;
