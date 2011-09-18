@@ -449,10 +449,19 @@ Foosball.System.prototype.resumeState = function () {
     // we can only save data as JSON (e.g. can't save functions)
     // so when we restore it, we have to set the data to an instance of Foosball.System
     // in this case: self
-    var data = JSON.parse(localStorage.getItem(this.__namespace + "-" + this.__name));
+    var data = JSON.parse(localStorage.getItem(this.__namespace + "-" + this.__name), function (key, value) {
+        if (value != null && value.__class != null) {
+            switch (value.__class) {
+                case "Foosball.Player": return new Foosball.Player(value); break;
+                case "Foosball.Game": return new Foosball.Game(value); break;
+                case "Foosball.Team": return new Foosball.Team(value); break;
+                case "Foosball.Point": return new Foosball.Point(value); break;
+            }
+        }
+        return value;
+    });
     this.Players = data != null ? data.Players : new Array();
     this.Games = data != null ? data.Games : new Array();
-
 }
 Foosball.System.prototype.saveState = function () {
     localStorage.setItem(this.__namespace + "-" + this.__name, JSON.stringify(this));
@@ -492,7 +501,7 @@ Foosball.System.prototype.addPlayer = function () {
 Foosball.System.prototype.addPoint = function (gameId, playerId) {
     var newPoint = new Foosball.Point();
     newPoint.PlayerId = playerId;
-    newPoint.Timestamp = new Date();
+    newPoint.CreateDate = new Date();
 
     this.Games[gameId].Points.push(newPoint);
     this.saveState();
@@ -594,26 +603,73 @@ Foosball.System.prototype.sortByDateDesc = function (a, b) {
 }
 
 
-Foosball.Player = function () {
-    this.Id = 0;
-    this.Name = "";
+Foosball.Player = function (o) {
+    this.__class = "Foosball.Player";
+
+    if (o == null) {
+        this.Id = null;
+        this.Name = "";
+    } else if ((o.__class || "") == "Foosball.Player") {
+        this.Id = o.Id;
+        this.Name = o.Name;
+    } else {
+        throw "Error initializing a Player.";
+    }
 }
-Foosball.Game = function () {
-    this.Id = 0;
-    this.Name = "";
-    this.Team1 = null; // black
-    this.Team2 = null; // white
-    this.Points = new Array();
-    this.StartDate = null;
-    this.EndDate = null;
+Foosball.Game = function (o) {
+    this.__class = "Foosball.Game";
+
+    if (o == null) {
+        this.Id = null;
+        this.Name = "";
+        this.Team1 = null; // black
+        this.Team2 = null; // white
+        this.Points = new Array();
+        this.StartDate = new Date(); ;
+        this.EndDate = null;
+    } else if ((o.__class || "") == "Foosball.Game") {
+        this.Id = o.Id;
+        this.Name = o.Name;
+        this.Team1 = o.Team1; // black
+        this.Team2 = o.Team2; // white
+        this.Points = o.Points;
+        this.StartDate = new Date(o.StartDate);
+        this.EndDate = new Date(o.EndDate);
+    } else {
+        throw "Error initializing a Game.";
+    }
 }
-Foosball.Team = function () {
-    this.Player1Id = null; // offense
-    this.Player2Id = null; // defense
+Foosball.Team = function (o) {
+    this.__class = "Foosball.Team";
+
+    if (o == null) {
+        this.Player1Id = null; // offense
+        this.Player2Id = null; // defense
+    } else if ((o.__class || "") == "Foosball.Team") {
+        this.Player1Id = o.Player1Id; // offense
+        this.Player2Id = o.Player2Id; // defense
+    } else {
+        throw "Error initializing a Team.";
+    }
 }
-Foosball.Point = function () {
-    this.PlayerId = null;
-    this.Timestamp = null;
+Foosball.Point = function (o) {
+    this.__class = "Foosball.Point";
+
+    if (o == null) {
+        this.PlayerId = null;
+        this.PositionId = null;
+        this.CreateDate = new Date();
+    } else if ((o.__class || "") == "Foosball.Point") {
+        this.PlayerId = o.PlayerId;
+        this.PositionId = o.PositionId;
+        this.CreateDate = new Date(o.CreateDate);
+    } else {
+        throw "Error initializing a Point.";
+    }
+
+    // Position
+    //   1: Offense
+    //   2: Defense
 }
 
 
