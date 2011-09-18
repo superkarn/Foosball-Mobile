@@ -85,9 +85,9 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPageGameList();">Games</a>
+        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPageGameList('fade');">Games</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#" data-role="button" data-icon="gear" onclick="Foosball.DOMHelper.gotoPageSystemSettings();" class="ui-btn-active ui-state-persist">System</a>
+        <a href="#" data-role="button" data-icon="gear" onclick="Foosball.DOMHelper.gotoPageSystemSettings('fade');" class="ui-btn-active ui-state-persist">System</a>
     </div>
 </div>
 
@@ -103,9 +103,9 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPageGameList();" class="ui-btn-active ui-state-persist">Games</a>
+        <a href="#" data-role="button" data-icon="grid" onclick="Foosball.DOMHelper.gotoPageGameList('fade');" class="ui-btn-active ui-state-persist">Games</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addGame(); return false;">Game</a>
-        <a href="#" data-role="button" data-icon="gear" onclick="Foosball.DOMHelper.gotoPageSystemSettings();">System</a>
+        <a href="#" data-role="button" data-icon="gear" onclick="Foosball.DOMHelper.gotoPageSystemSettings('fade');">System</a>
     </div>
 </div>
 
@@ -164,7 +164,7 @@
 
     </div>
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameList(true);">Back</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageGameList('slide', true);">Back</a>
         <a href="#" data-role="button" onclick="Foosball.DOMHelper.gotoPageGameSettings($('#pageGameDetails_Id').val());">Settings</a>
     </div>
 </div>
@@ -213,7 +213,7 @@
     </div>
     
     <div data-role="footer" data-id="myFooter" data-position="fixed" class="ui-bar">
-        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageSystemSettings(true);">Back</a>
+        <a href="#" data-role="button" data-icon="arrow-l" onclick="Foosball.DOMHelper.gotoPageSystemSettings('slide', true);">Back</a>
         <a href="#" data-role="button" data-icon="plus" onclick="Foosball.DOMHelper.addPlayer(); return false;">Player</a>
     </div>
 </div>
@@ -259,16 +259,16 @@ Foosball.DOMHelper.initialize = function (name) {
     Foosball.DOMHelper.gotoPageGameList();
 }
 
-Foosball.DOMHelper.gotoPageSystemSettings = function (transitionReverse) {
+Foosball.DOMHelper.gotoPageSystemSettings = function (transitionType, transitionReverse) {
     $.mobile.changePage("#pageSystemSettings", {
-        transition: "slide",
+        transition: transitionType || "slide",
         reverse: transitionReverse || false
     });
 }
-Foosball.DOMHelper.gotoPageGameList = function (transitionReverse) {
+Foosball.DOMHelper.gotoPageGameList = function (transitionType, transitionReverse) {
     Foosball.DOMHelper.refreshGameList();
     $.mobile.changePage("#pageGameList", {
-        transition: "slide",
+        transition: transitionType || "slide",
         reverse: transitionReverse || false
     });
 }
